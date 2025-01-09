@@ -17,7 +17,10 @@ class ApiGenreController extends AbstractController
         $genres=$repo->findAll();
         $resultat=$serializer->serialize(
             $genres,
-            'json'
+            'json',
+            [
+                'groups' =>['listeGenreSimple']
+            ]
         );
         return new JsonResponse($resultat,200,[],true);
     }
