@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\GenreRepository;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -19,7 +20,7 @@ class ApiGenreController extends AbstractController
             $genres,
             'json',
             [
-                'groups' =>['listeGenreSimple']
+                'groups' =>['listGenreFull']
             ]
         );
         return new JsonResponse($resultat,200,[],true);

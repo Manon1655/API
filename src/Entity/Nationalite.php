@@ -25,7 +25,7 @@ class Nationalite
     private $libelle;
 
     /**
-     * @ORM\OneToMany(targetEntity=Auteur::class, mappedBy="ManyToOne")
+     * @ORM\OneToMany(targetEntity=Auteur::class, mappedBy="Relation")
      */
     private $auteurs;
 
@@ -63,7 +63,7 @@ class Nationalite
     {
         if (!$this->auteurs->contains($auteur)) {
             $this->auteurs[] = $auteur;
-            $auteur->setManyToOne($this);
+            $auteur->setRelation($this);
         }
 
         return $this;
@@ -73,8 +73,8 @@ class Nationalite
     {
         if ($this->auteurs->removeElement($auteur)) {
             // set the owning side to null (unless already changed)
-            if ($auteur->getManyToOne() === $this) {
-                $auteur->setManyToOne(null);
+            if ($auteur->getRelation() === $this) {
+                $auteur->setRelation(null);
             }
         }
 

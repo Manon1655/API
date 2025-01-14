@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\AuteurRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\AuteurRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=AuteurRepository::class)
@@ -21,24 +22,26 @@ class Auteur
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"listGenreFull"})
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"listGenreFull"})
      */
     private $prenom;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Nationalite::class, inversedBy="auteurs")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $ManyToOne;
 
     /**
      * @ORM\OneToMany(targetEntity=Livre::class, mappedBy="auteur")
      */
     private $livres;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Nationalite::class, inversedBy="auteurs")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $Relation;
 
     public function __construct()
     {
@@ -74,17 +77,6 @@ class Auteur
         return $this;
     }
 
-    public function getManyToOne(): ?Nationalite
-    {
-        return $this->ManyToOne;
-    }
-
-    public function setManyToOne(?Nationalite $ManyToOne): self
-    {
-        $this->ManyToOne = $ManyToOne;
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Livre>
@@ -107,11 +99,22 @@ class Auteur
     public function removeLivre(Livre $livre): self
     {
         if ($this->livres->removeElement($livre)) {
-            // set the owning side to null (unless already changed)
             if ($livre->getAuteur() === $this) {
                 $livre->setAuteur(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getRelation(): ?Nationalite
+    {
+        return $this->Relation;
+    }
+
+    public function setRelation(?Nationalite $Relation): self
+    {
+        $this->Relation = $Relation;
 
         return $this;
     }
