@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Auteur;
-use App\Repository\AuteurRepository;
+use App\Entity\Adherent;
+use App\Repository\AdherentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\NationaliteRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,34 +15,34 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class ApiAuteurController extends AbstractController
+class ApiAdherentController extends AbstractController
 {
     /**
-     * @Route("/api/auteurs", name="api_auteurs", methods={"GET"})
+     * @Route("/api/adherents", name="api_adherents", methods={"GET"})
      */
-    public function list(AuteurRepository $repo, SerializerInterface $serializer)
+    public function list(AdherentRepository $repo, SerializerInterface $serializer)
     {
-        $auteurs = $repo->findAll();
+        $adherents = $repo->findAll();
         $resultat = $serializer->serialize(
-            $auteurs,
+            $adherents,
             'json',
             [
-                'groups' => ['listAuteurFull']
+                'groups' => ['listAdherentFull']
             ]
         );
         return new JsonResponse($resultat, 200, [], true);
     }
 
     /**
-     * @Route("/api/auteurs/{id}", name="api_auteurs_show", methods={"GET"})
+     * @Route("/api/adherents/{id}", name="api_adherents_show", methods={"GET"})
      */
-    public function show(Auteur $auteur, SerializerInterface $serializer)
+    public function show(Adherent $adherent, SerializerInterface $serializer)
     {
         $resultat = $serializer->serialize(
-            $auteur,
+            $adherent,
             'json',
             [
-                'groups' => ['listAuteurSimple']
+                'groups' => ['listAdherentSimple']
             ]
         );
 
@@ -50,33 +50,33 @@ class ApiAuteurController extends AbstractController
     }
 
     /**
-     * @Route("/api/auteurs", name="api_auteurs_create", methods={"POST"})
+     * @Route("/api/adherents", name="api_adherents_create", methods={"POST"})
      */
     public function create(Request $request, NationaliteRepository $repoNation, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
         $data = $request->getContent();
         $dataTab = $serializer->decode($data, 'json');
 
-        $auteur = new Auteur();
+        $adherent = new Adherent();
         $Relation = $repoNation->find($dataTab['nationalite']['id']);
-        $serializer->deserialize($data, Auteur::class, 'json', ['object_to_populate' => $auteur]);
-        $auteur->setRelation($Relation);
-        $errors = $validator->validate($auteur);
+        $serializer->deserialize($data, Adherent::class, 'json', ['object_to_populate' => $adherent]);
+        $adherent->setRelation($Relation);
+        $errors = $validator->validate($adherent);
         if (count($errors)) {
             $errorsJson = $serializer->serialize($errors, 'json');
             return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST, [], true);
         }
 
-        $manager->persist($auteur);
+        $manager->persist($adherent);
         $manager->flush();
 
         return new JsonResponse(
-            "L'auteur a bien été créé",
+            "L'adherent a bien été créé",
             Response::HTTP_CREATED,
             [
                 "location" => $this->generateUrl(
-                    'api_auteurs_show',
-                    ["id" => $auteur->getId()],
+                    'api_adherents_show',
+                    ["id" => $adherent->getId()],
                     UrlGeneratorInterface::ABSOLUTE_URL
                 )
             ],
@@ -85,35 +85,35 @@ class ApiAuteurController extends AbstractController
     }
 
     /**
-     * @Route("/api/auteurs/{id}", name="api_auteurs_update", methods={"PUT"})
+     * @Route("/api/adherents/{id}", name="api_adherents_update", methods={"PUT"})
      */
-    public function edit(Auteur $auteur, NationaliteRepository $repoNation, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
+    public function edit(Adherent $adherent, NationaliteRepository $repoNation, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
         $data = $request->getContent();
         $dataTab = $serializer->decode($data, 'json');
         $Relation = $repoNation->find($dataTab['nationalite']['id']);
-        $serializer->deserialize($data, Auteur::class, 'json', ['object_to_populate' => $auteur]);
-        $auteur->setRelation($Relation);
-        $errors = $validator->validate($auteur);
+        $serializer->deserialize($data, Adherent::class, 'json', ['object_to_populate' => $adherent]);
+        $adherent->setRelation($Relation);
+        $errors = $validator->validate($adherent);
         if (count($errors)) {
             $errorsJson = $serializer->serialize($errors, 'json');
             return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST, [], true);
         }
 
-        $manager->persist($auteur);
+        $manager->persist($adherent);
         $manager->flush();
 
-        return new JsonResponse("L'auteur a bien été modifié", Response::HTTP_OK, [], true); 
+        return new JsonResponse("L'adherent a bien été modifié", Response::HTTP_OK, [], true); 
     }
 
     /**
-     * @Route("/api/auteurs/{id}", name="api_auteurs_delete", methods={"DELETE"})
+     * @Route("/api/adherents/{id}", name="api_adherents_delete", methods={"DELETE"})
      */
-    public function delete(Auteur $auteur, EntityManagerInterface $manager)
+    public function delete(Adherent $adherent, EntityManagerInterface $manager)
     {
-        $manager->remove($auteur);
+        $manager->remove($adherent);
         $manager->flush();
 
-        return new JsonResponse("L'auteur a bien été supprimé", Response::HTTP_OK, []);
+        return new JsonResponse("L'adherent a bien été supprimé", Response::HTTP_OK, []);
     }
 }

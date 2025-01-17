@@ -4,9 +4,10 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass=LivreRepository::class)
+ * @ORM\Entity(repositoryClass="App\Repository\LivreRepository")
  */
 class Livre
 {
@@ -14,66 +15,82 @@ class Livre
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"listAuteurFull"})
+     * @Groups({"listLivreFull", "listLivreSimple"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"listGenreFull"})
-     * @Groups({"listAuteurFull"})
+     * @Groups({"listLivreFull", "listLivreSimple"})
+     * @Assert\NotBlank(message="L'ISBN ne peut pas être vide.")
+     * @Assert\Length(
+     *     max=255,
+     *     maxMessage="L'ISBN ne doit pas dépasser {{ limit }} caractères."
+     * )
      */
     private $isbn;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"listGenreFull"})
-     * @Groups({"listAuteurFull"})
+     * @Groups({"listLivreFull", "listLivreSimple"})
+     * @Assert\NotBlank(message="Le titre est obligatoire.")
+     * @Assert\Length(
+     *     max=255,
+     *     maxMessage="Le titre ne doit pas dépasser {{ limit }} caractères."
+     * )
      */
     private $titre;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"listGenreFull"})
-     * @Groups({"listAuteurFull"})
+     * @Groups({"listLivreFull"})
+     * @Assert\PositiveOrZero(message="Le prix doit être un nombre positif ou nul.")
      */
     private $prix;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Genre::class, inversedBy="livres")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Genre", inversedBy="livres")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"listAuteurFull"})
+     * @Groups({"listLivreFull", "listLivreSimple"})
      */
     private $genre;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Editeur::class, inversedBy="livres")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Editeur", inversedBy="livres")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"listGenreFull"})
-     * @Groups({"listAuteurFull"})
+     * @Groups({"listLivreFull", "listLivreSimple"})
      */
     private $editeur;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Auteur::class, inversedBy="livres")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Auteur", inversedBy="livres")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"listGenreFull"})
+     * @Groups({"listLivreFull", "listLivreSimple"})
      */
     private $auteur;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups({"listGenreFull"})
-     * @Groups({"listAuteurFull"})
+     * @Groups({"listLivreFull"})
+     * @Assert\Range(
+     *     min=1000,
+     *     max=9999,
+     *     notInRangeMessage="L'année doit être comprise entre {{ min }} et {{ max }}."
+     * )
      */
     private $annee;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"listGenreFull"})
-     * @Groups({"listAuteurFull"})
+     * @Groups({"listLivreFull"})
+     * @Assert\Length(
+     *     max=255,
+     *     maxMessage="La langue ne doit pas dépasser {{ limit }} caractères."
+     * )
      */
     private $langue;
+
+    // --- Getters and Setters ---
 
     public function getId(): ?int
     {
@@ -88,7 +105,6 @@ class Livre
     public function setIsbn(string $isbn): self
     {
         $this->isbn = $isbn;
-
         return $this;
     }
 
@@ -100,7 +116,6 @@ class Livre
     public function setTitre(string $titre): self
     {
         $this->titre = $titre;
-
         return $this;
     }
 
@@ -112,7 +127,6 @@ class Livre
     public function setPrix(?float $prix): self
     {
         $this->prix = $prix;
-
         return $this;
     }
 
@@ -124,7 +138,6 @@ class Livre
     public function setGenre(?Genre $genre): self
     {
         $this->genre = $genre;
-
         return $this;
     }
 
@@ -136,7 +149,6 @@ class Livre
     public function setEditeur(?Editeur $editeur): self
     {
         $this->editeur = $editeur;
-
         return $this;
     }
 
@@ -148,7 +160,6 @@ class Livre
     public function setAuteur(?Auteur $auteur): self
     {
         $this->auteur = $auteur;
-
         return $this;
     }
 
@@ -160,7 +171,6 @@ class Livre
     public function setAnnee(?int $annee): self
     {
         $this->annee = $annee;
-
         return $this;
     }
 
@@ -172,7 +182,6 @@ class Livre
     public function setLangue(?string $langue): self
     {
         $this->langue = $langue;
-
         return $this;
     }
 }

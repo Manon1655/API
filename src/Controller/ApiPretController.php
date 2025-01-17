@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Livre;
-use App\Repository\LivreRepository;
+use App\Entity\Pret;
+use App\Repository\PretRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,35 +14,34 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class ApiLivreController extends AbstractController
+class ApiPretController extends AbstractController
 {
     /**
-     * @Route("/api/livres", name="api_livres", methods={"GET"})
+     * @Route("/api/prets", name="api_prets", methods={"GET"})
      */
-    public function list(LivreRepository $repo, SerializerInterface $serializer)
+    public function list(PretRepository $repo, SerializerInterface $serializer)
     {
-        $livres = $repo->findAll();
-        // dd($livres);
+        $prets = $repo->findAll();
         $resultat = $serializer->serialize(
-            $livres,
+            $prets,
             'json',
             [
-                'groups' => ['listLivreFull']
+                'groups' => ['listPretFull']
             ]
         );
         return new JsonResponse($resultat,200,[],true);
     }
 
     /**
-     * @Route("/api/livres/{id}", name="api_livres_show", methods={"GET"})
+     * @Route("/api/prets/{id}", name="api_prets_show", methods={"GET"})
      */
-    public function show(Livre $livre, SerializerInterface $serializer)
+    public function show(Pret $pret, SerializerInterface $serializer)
     {
         $resultat = $serializer->serialize(
-            $livre,
+            $pret,
             'json',
             [
-                'groups' => ['listLivreSimple']
+                'groups' => ['listPretSimple']
             ]
         );
 
@@ -50,65 +49,65 @@ class ApiLivreController extends AbstractController
     }
 
     /**
-     * @Route("/api/livres", name="api_livres_create", methods={"POST"})
+     * @Route("/api/prets", name="api_prets_create", methods={"POST"})
      */
     public function create(Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
         $data=$request->getContent();
-        // $livre=new Livre();
-        // $serializer->deserialize($data, Livre::class,'json',['object_to_populate'=>$livre]);
-        $livre=$serializer->deserialize($data, Livre::class,'json');
+        // $pret=new Pret();
+        // $serializer->deserialize($data, Pret::class,'json',['object_to_populate'=>$pret]);
+        $pret=$serializer->deserialize($data, Pret::class,'json');
 
         // gestion des erreurs de validation 
-        $errors=$validator->validate($livre);
+        $errors=$validator->validate($pret);
         if(count($errors)){
             $errorsJson=$serializer->serialize($errors,'json');
             return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST,[],true);
         }
 
-        $manager->persist($livre);
+        $manager->persist($pret);
         $manager->flush();
 
         return new JsonResponse(
-            "Le livre a bien été créé",
+            "Le pret a bien été créé",
             Response::HTTP_CREATED,
-            // ["location"=>"api/livres/".$livre->getId()],
+            // ["location"=>"api/prets/".$pret->getId()],
             ["location"=> $this->generateUrl(
-                    'api_livres_show',
-                ["id"=>$livre->getId()],
+                    'api_prets_show',
+                ["id"=>$pret->getId()],
                 UrlGeneratorInterface::ABSOLUTE_URL)],
             true);
     }
 
     /**
-     * @Route("/api/livres/{id}", name="api_livres_update", methods={"PUT"})
+     * @Route("/api/prets/{id}", name="api_prets_update", methods={"PUT"})
      */
-    public function edit(Livre $livre,Request $request,EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
+    public function edit(Pret $pret,Request $request,EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
         $data=$request->getContent();
-        $serializer->deserialize($data, Livre::class,'json',['object_to_populate'=>$livre]);
+        $serializer->deserialize($data, Pret::class,'json',['object_to_populate'=>$pret]);
 
         // gestion des erreurs de validation 
-        $errors=$validator->validate($livre);
+        $errors=$validator->validate($pret);
         if(count($errors)){
             $errorsJson=$serializer->serialize($errors,'json');
             return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST,[],true);
         }
 
-        $manager->persist($livre);
+        $manager->persist($pret);
         $manager->flush();
 
-        return new JsonResponse("le livre a bien été modifié",Response::HTTP_OK,[],true); 
+        return new JsonResponse("le pret a bien été modifié",Response::HTTP_OK,[],true); 
     }
 
     /**
-     * @Route("/api/livres/{id}", name="api_livres_delete", methods={"DELETE"})
+     * @Route("/api/prets/{id}", name="api_prets_delete", methods={"DELETE"})
      */
-    public function delete(Livre $livre,EntityManagerInterface $manager)
+    public function delete(Pret $pret,EntityManagerInterface $manager)
     {
-        $manager->remove($livre);
+        $manager->remove($pret);
         $manager->flush();
 
-        return new JsonResponse("Le livre a bien été supprimé", Response::HTTP_OK, []);
+        return new JsonResponse("Le pret a bien été supprimé", Response::HTTP_OK, []);
     }
 }

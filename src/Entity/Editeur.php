@@ -16,18 +16,19 @@ class Editeur
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"listEditeurFull","listEditeurSimple"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"listGenreFull"})
-     * @Groups({"listAuteurFull"})
+     * @Groups({"listEditeurFull","listEditeurSimple","listLivreFull", "listLivreSimple"})
      */
     private $nom;
 
     /**
      * @ORM\OneToMany(targetEntity=Livre::class, mappedBy="editeur")
+     * @Groups({"listLivreFull", "listLivreSimple"})
      */
     private $livres;
 
