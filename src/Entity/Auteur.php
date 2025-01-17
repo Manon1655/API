@@ -55,12 +55,14 @@ class Auteur
      * @Groups({"listGenreFull", "listAuteurFull", "listAuteurSimple"})
      * @Assert\NotNull(message="La nationalité est obligatoire.")
      */
-    private $relation;
+    private $Relation;
 
     public function __construct()
     {
         $this->livres = new ArrayCollection();
     }
+
+    // Getters et Setters
 
     public function getId(): ?int
     {
@@ -125,7 +127,7 @@ class Auteur
         return $this->Relation;
     }
 
-    public function setRelation(?Nationalite $Relation): self
+    public function setNationalite(?Nationalite $Relation): self
     {
         $this->Relation = $Relation;
 
