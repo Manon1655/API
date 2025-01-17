@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=AuteurRepository::class)
@@ -16,19 +17,29 @@ class Auteur
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"listAuteurFull","listAuteurSimple"})
+     * @Groups({"listAuteurFull", "listAuteurSimple"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"listGenreFull","listAuteurFull","listAuteurSimple"})
+     * @Groups({"listGenreFull", "listAuteurFull", "listAuteurSimple"})
+     * @Assert\NotBlank(message="Le nom est obligatoire.")
+     * @Assert\Length(
+     *     max=255,
+     *     maxMessage="Le nom ne doit pas dépasser {{ limit }} caractères."
+     * )
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255)
-    * @Groups({"listGenreFull","listAuteurFull","listAuteurSimple"})
+     * @Groups({"listGenreFull", "listAuteurFull", "listAuteurSimple"})
+     * @Assert\NotBlank(message="Le prénom est obligatoire.")
+     * @Assert\Length(
+     *     max=255,
+     *     maxMessage="Le prénom ne doit pas dépasser {{ limit }} caractères."
+     * )
      */
     private $prenom;
 
@@ -41,9 +52,10 @@ class Auteur
     /**
      * @ORM\ManyToOne(targetEntity=Nationalite::class, inversedBy="auteurs")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"listGenreFull","listAuteurFull","listAuteurSimple"})
+     * @Groups({"listGenreFull", "listAuteurFull", "listAuteurSimple"})
+     * @Assert\NotNull(message="La nationalité est obligatoire.")
      */
-    private $Relation;
+    private $relation;
 
     public function __construct()
     {
@@ -78,7 +90,6 @@ class Auteur
 
         return $this;
     }
-
 
     /**
      * @return Collection<int, Livre>
