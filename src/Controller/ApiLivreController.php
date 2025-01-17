@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Genre;
-use App\Repository\GenreRepository;
+use App\Entity\Livre;
+use App\Repository\LivreRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,34 +14,34 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class ApiGenreController extends AbstractController
+class ApiLivreController extends AbstractController
 {
     /**
-     * @Route("/api/genres", name="api_genres", methods={"GET"})
+     * @Route("/api/livres", name="api_livres", methods={"GET"})
      */
-    public function list(GenreRepository $repo, SerializerInterface $serializer)
+    public function list(LivreRepository $repo, SerializerInterface $serializer)
     {
-        $genres = $repo->findAll();
+        $livres = $repo->findAll();
         $resultat = $serializer->serialize(
-            $genres,
+            $livres,
             'json',
             [
-                'groups' => ['listGenreFull']
+                'groups' => ['listLivreFull']
             ]
         );
         return new JsonResponse($resultat,200,[],true);
     }
 
     /**
-     * @Route("/api/genres/{id}", name="api_genres_show", methods={"GET"})
+     * @Route("/api/livres/{id}", name="api_livres_show", methods={"GET"})
      */
-    public function show(Genre $genre, SerializerInterface $serializer)
+    public function show(Livre $livre, SerializerInterface $serializer)
     {
         $resultat = $serializer->serialize(
-            $genre,
+            $livre,
             'json',
             [
-                'groups' => ['listGenreSimple']
+                'groups' => ['listLivreSimple']
             ]
         );
 
@@ -49,65 +49,65 @@ class ApiGenreController extends AbstractController
     }
 
     /**
-     * @Route("/api/genres", name="api_genres_create", methods={"POST"})
+     * @Route("/api/livres", name="api_livres_create", methods={"POST"})
      */
     public function create(Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
         $data=$request->getContent();
-        // $genre=new Genre();
-        // $serializer->deserialize($data, Genre::class,'json',['object_to_populate'=>$genre]);
-        $genre=$serializer->deserialize($data, Genre::class,'json');
+        // $livre=new Livre();
+        // $serializer->deserialize($data, Livre::class,'json',['object_to_populate'=>$livre]);
+        $livre=$serializer->deserialize($data, Livre::class,'json');
 
         // gestion des erreurs de validation 
-        $errors=$validator->validate($genre);
+        $errors=$validator->validate($livre);
         if(count($errors)){
             $errorsJson=$serializer->serialize($errors,'json');
             return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST,[],true);
         }
 
-        $manager->persist($genre);
+        $manager->persist($livre);
         $manager->flush();
 
         return new JsonResponse(
-            "Le genre a bien été créé",
+            "Le livre a bien été créé",
             Response::HTTP_CREATED,
-            // ["location"=>"api/genres/".$genre->getId()],
+            // ["location"=>"api/livres/".$livre->getId()],
             ["location"=> $this->generateUrl(
-                    'api_genres_show',
-                ["id"=>$genre->getId()],
+                    'api_livres_show',
+                ["id"=>$livre->getId()],
                 UrlGeneratorInterface::ABSOLUTE_URL)],
             true);
     }
 
     /**
-     * @Route("/api/genres/{id}", name="api_genres_update", methods={"PUT"})
+     * @Route("/api/livres/{id}", name="api_livres_update", methods={"PUT"})
      */
-    public function edit(Genre $genre,Request $request,EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
+    public function edit(Livre $livre,Request $request,EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
         $data=$request->getContent();
-        $serializer->deserialize($data, Genre::class,'json',['object_to_populate'=>$genre]);
+        $serializer->deserialize($data, Livre::class,'json',['object_to_populate'=>$livre]);
 
         // gestion des erreurs de validation 
-        $errors=$validator->validate($genre);
+        $errors=$validator->validate($livre);
         if(count($errors)){
             $errorsJson=$serializer->serialize($errors,'json');
             return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST,[],true);
         }
 
-        $manager->persist($genre);
+        $manager->persist($livre);
         $manager->flush();
 
-        return new JsonResponse("le genre a bien été modifié",Response::HTTP_OK,[],true); 
+        return new JsonResponse("le livre a bien été modifié",Response::HTTP_OK,[],true); 
     }
 
     /**
-     * @Route("/api/genres/{id}", name="api_genres_delete", methods={"DELETE"})
+     * @Route("/api/livres/{id}", name="api_livres_delete", methods={"DELETE"})
      */
-    public function delete(Genre $genre,EntityManagerInterface $manager)
+    public function delete(Livre $livre,EntityManagerInterface $manager)
     {
-        $manager->remove($genre);
+        $manager->remove($livre);
         $manager->flush();
 
-        return new JsonResponse("Le genre a bien été supprimé", Response::HTTP_OK, []);
+        return new JsonResponse("Le livre a bien été supprimé", Response::HTTP_OK, []);
     }
 }
