@@ -65,7 +65,6 @@ class Adherent
 
     /**
      * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="adherent")
-     * @Groups({"listAdherentFull","listAdherentSimple"})
      */
     private $pret;
 
