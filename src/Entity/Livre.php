@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -71,6 +73,16 @@ class Livre
      * @Groups({"listAuteurFull"})
      */
     private $langue;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="livres")
+     */
+    private $pret;
+
+    public function __construct()
+    {
+        $this->pret = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -169,6 +181,36 @@ class Livre
     public function setLangue(?string $langue): self
     {
         $this->langue = $langue;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Pret>
+     */
+    public function getPret(): Collection
+    {
+        return $this->pret;
+    }
+
+    public function addPret(Pret $pret): self
+    {
+        if (!$this->pret->contains($pret)) {
+            $this->pret[] = $pret;
+            $pret->setLivre($this);
+        }
+
+        return $this;
+    }
+
+    public function removePret(Pret $pret): self
+    {
+        if ($this->pret->removeElement($pret)) {
+            // set the owning side to null (unless already changed)
+            if ($pret->getLivre() === $this) {
+                $pret->setLivre(null);
+            }
+        }
 
         return $this;
     }

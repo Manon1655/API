@@ -56,18 +56,16 @@ class ApiAdherentController extends AbstractController
     {
         $data = $request->getContent();
         $dataTab = $serializer->decode($data, 'json');
-
-        $adherent = new Adherent();
-        $Relation = $repoNation->find($dataTab['nationalite']['id']);
-        $serializer->deserialize($data, Adherent::class, 'json', ['object_to_populate' => $adherent]);
-        $adherent->setRelation($Relation);
-        $errors = $validator->validate($adherent);
+        $auteur = $repoNation->find($dataTab['nationalite']['id']);
+        $serializer->deserialize($data, Adherent::class, 'json', ['object_to_populate' => $auteur]);
+        $auteur->setNationalite($auteur);
+        $errors = $validator->validate($auteur);
         if (count($errors)) {
             $errorsJson = $serializer->serialize($errors, 'json');
             return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST, [], true);
         }
 
-        $manager->persist($adherent);
+        $manager->persist($auteur);
         $manager->flush();
 
         return new JsonResponse(
@@ -76,7 +74,7 @@ class ApiAdherentController extends AbstractController
             [
                 "location" => $this->generateUrl(
                     'api_adherents_show',
-                    ["id" => $adherent->getId()],
+                    ["id" => $auteur->getId()],
                     UrlGeneratorInterface::ABSOLUTE_URL
                 )
             ],
@@ -91,9 +89,9 @@ class ApiAdherentController extends AbstractController
     {
         $data = $request->getContent();
         $dataTab = $serializer->decode($data, 'json');
-        $Relation = $repoNation->find($dataTab['nationalite']['id']);
+        $auteur = $repoNation->find($dataTab['nationalite']['id']);
         $serializer->deserialize($data, Adherent::class, 'json', ['object_to_populate' => $adherent]);
-        $adherent->setRelation($Relation);
+        $adherent->setNationalite($auteur);
         $errors = $validator->validate($adherent);
         if (count($errors)) {
             $errorsJson = $serializer->serialize($errors, 'json');

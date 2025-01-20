@@ -43,6 +43,11 @@ class Pret
      */
     private $adh;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Livre::class, inversedBy="pret")
+     */
+    private $livre;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -92,6 +97,18 @@ class Pret
     public function setAdh(?Adherent $adh): self
     {
         $this->adh = $adh;
+
+        return $this;
+    }
+
+    public function getLivre(): ?Livre
+    {
+        return $this->livre;
+    }
+
+    public function setLivre(?Livre $livre): self
+    {
+        $this->livre = $livre;
 
         return $this;
     }

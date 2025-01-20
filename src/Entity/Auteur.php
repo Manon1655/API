@@ -45,24 +45,19 @@ class Auteur
 
     /**
      * @ORM\OneToMany(targetEntity=Livre::class, mappedBy="auteur")
-     * @Groups({"listAuteurFull"})
+     * @Groups({"listLivreFull"})
      */
     private $livres;
 
     /**
      * @ORM\ManyToOne(targetEntity=Nationalite::class, inversedBy="auteurs")
-     * @ORM\JoinColumn(nullable=false)
-     * @Groups({"listGenreFull", "listAuteurFull", "listAuteurSimple"})
-     * @Assert\NotNull(message="La nationalité est obligatoire.")
      */
-    private $Relation;
+    private $nationalite;
 
     public function __construct()
     {
         $this->livres = new ArrayCollection();
     }
-
-    // Getters et Setters
 
     public function getId(): ?int
     {
@@ -122,14 +117,14 @@ class Auteur
         return $this;
     }
 
-    public function getRelation(): ?Nationalite
+    public function getNationalite(): ?Nationalite
     {
-        return $this->Relation;
+        return $this->nationalite;
     }
 
-    public function setNationalite(?Nationalite $Relation): self
+    public function setNationalite(?Nationalite $nationalite): self
     {
-        $this->Relation = $Relation;
+        $this->nationalite = $nationalite;
 
         return $this;
     }

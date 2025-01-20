@@ -55,12 +55,10 @@ class ApiAuteurController extends AbstractController
     public function create(Request $request, NationaliteRepository $repoNation, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
         $data = $request->getContent();
-        $dataTab = $serializer->decode($data, 'json');
-
-        $auteur = new Auteur();
-        $Relation = $repoNation->find($dataTab['nationalite']['id']);
+        // $dataTab = $serializer->decode($data, 'json');
+        // $nationalite = $repoNation->find($dataTab['nationalite']['id']);
         $serializer->deserialize($data, Auteur::class, 'json', ['object_to_populate' => $auteur]);
-        $auteur->setRelation($Relation);
+        $auteur->setNationalite($nationalite);
         $errors = $validator->validate($auteur);
         if (count($errors)) {
             $errorsJson = $serializer->serialize($errors, 'json');
@@ -90,10 +88,10 @@ class ApiAuteurController extends AbstractController
     public function edit(Auteur $auteur, NationaliteRepository $repoNation, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
         $data = $request->getContent();
-        $dataTab = $serializer->decode($data, 'json');
-        $Relation = $repoNation->find($dataTab['nationalite']['id']);
+        // $dataTab = $serializer->decode($data, 'json');
+        // $nationalite = $repoNation->find($dataTab['nationalite']['id']);
         $serializer->deserialize($data, Auteur::class, 'json', ['object_to_populate' => $auteur]);
-        $auteur->setRelation($Relation);
+        $auteur->setNationalite($nationalite);
         $errors = $validator->validate($auteur);
         if (count($errors)) {
             $errorsJson = $serializer->serialize($errors, 'json');
