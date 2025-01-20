@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Livre;
+use App\Entity\Nationalite;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -51,6 +53,7 @@ class Auteur
 
     /**
      * @ORM\ManyToOne(targetEntity=Nationalite::class, inversedBy="auteurs")
+     * @Groups({"listAuteurSimple","listNationaliteSimple"})
      */
     private $nationalite;
 

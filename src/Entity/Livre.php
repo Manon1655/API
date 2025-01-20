@@ -48,8 +48,7 @@ class Livre
     /**
      * @ORM\ManyToOne(targetEntity=Editeur::class, inversedBy="livres")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"listGenreFull"})
-     * @Groups({"listAuteurFull"})
+     * @Groups({"listGenreFull","listAuteurFull"})
      */
     private $editeur;
 
@@ -62,20 +61,18 @@ class Livre
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups({"listGenreFull"})
-     * @Groups({"listAuteurFull"})
+     * @Groups({"listGenreFull","listAuteurFull"})
      */
     private $annee;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"listGenreFull"})
-     * @Groups({"listAuteurFull"})
+     * @Groups({"listGenreFull","listAuteurFull"})
      */
     private $langue;
 
     /**
-     * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="livres")
+     * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="livre")
      * @Groups({"listLivreFull","listLivreSimple"})
      */
     private $pret;

@@ -28,7 +28,6 @@ class Nationalite
 
     /**
      * @ORM\OneToMany(targetEntity=Auteur::class, mappedBy="nationalite")
-     * @Groups({"listAuteurFull","listAuteurSimple"})
      */
     private $auteurs;
 

@@ -57,10 +57,13 @@ class ApiAdherentController extends AbstractController
         $data = $request->getContent();
         $dataTab = json_decode($data, true);
         $adherent = $serializer->deserialize($data, Adherent::class, 'json');
-    
-        if (isset($dataTab['nationalite']['id'])) {
-            $nationalite = $repopret->find($dataTab['nationalite']['id']);
-            $adherent->setNationalite($nationalite);
+        
+        if (isset($dataTab['pret']['id'])) {
+            $pret = $repopret->find($dataTab['pret']['id']);
+            if (!$pret) {
+                return new JsonResponse("Prêt invalide ou introuvable", Response::HTTP_BAD_REQUEST);
+            }
+            $adherent->addPret($pret); 
         }
         $errors = $validator->validate($adherent);
         if (count($errors)) {
@@ -69,7 +72,7 @@ class ApiAdherentController extends AbstractController
         }
         $manager->persist($adherent);
         $manager->flush();
-    
+        
         return new JsonResponse(
             "L'adhérent a bien été créé",
             Response::HTTP_CREATED,

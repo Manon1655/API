@@ -65,6 +65,7 @@ class Adherent
 
     /**
      * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="adherent")
+     * @Groups({"listPretFull","listPretSimple"})
      */
     private $pret;
 
@@ -170,6 +171,18 @@ class Adherent
         return $this->pret;
     }
 
+    /**
+     * Set the value of pret
+     *
+     * @return  self
+     */ 
+    public function setPret($pret)
+    {
+        $this->pret = $pret;
+
+        return $this;
+    }
+    
     public function addPret(Pret $pret): self
     {
         if (!$this->pret->contains($pret)) {
@@ -191,5 +204,6 @@ class Adherent
 
         return $this;
     }
+
 
 }

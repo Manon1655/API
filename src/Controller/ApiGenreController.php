@@ -19,9 +19,9 @@ class ApiGenreController extends AbstractController
     /**
      * @Route("/api/genres", name="api_genres", methods={"GET"})
      */
-    public function list(GenreRepository $repo, SerializerInterface $serializer)
+    public function listGenres(GenreRepository $genreRepository, SerializerInterface $serializer): JsonResponse
     {
-        $genres = $repo->findAll();
+        $genres = $genreRepository->findAll();
         $resultat = $serializer->serialize(
             $genres,
             'json',
@@ -29,24 +29,39 @@ class ApiGenreController extends AbstractController
                 'groups' => ['listGenreFull']
             ]
         );
-        return new JsonResponse($resultat,200,[],true);
+        return new JsonResponse($resultat, Response::HTTP_OK, [], true);
+    }
+
+    /**
+     * @Route("/genres", name="genres_list", methods={"GET"})
+     */
+    public function renderGenres(GenreRepository $genreRepository): Response
+    {
+        $genres = $genreRepository->findAll();
+        return $this->render('api_genre/genre.html.twig', [
+            'genres' => $genres,
+        ]);
     }
 
     /**
      * @Route("/api/genres/{id}", name="api_genres_show", methods={"GET"})
      */
-    public function show(Genre $genre, SerializerInterface $serializer)
+    public function showGenre(GenreRepository $genreRepository, SerializerInterface $serializer, int $id): JsonResponse
     {
+        $genre = $genreRepository->find($id);
+        if (!$genre) {
+            return new JsonResponse("Genre not found", Response::HTTP_NOT_FOUND);
+        }
         $resultat = $serializer->serialize(
             $genre,
             'json',
             [
-                'groups' => ['listGenreSimple']
+                'groups' => ['listGenreFull']
             ]
         );
-
         return new JsonResponse($resultat, Response::HTTP_OK, [], true);
     }
+
 
     /**
      * @Route("/api/genres", name="api_genres_create", methods={"POST"})
