@@ -20,7 +20,7 @@ class ApiAdherentController extends AbstractController
     /**
      * @Route("/api/adherents", name="api_adherents", methods={"GET"})
      */
-    public function list(AdherentRepository $repo, SerializerInterface $serializer)
+    public function list(AdherentRepository $repo, SerializerInterface $serializer): JsonResponse
     {
         $adherents = $repo->findAll();
         $resultat = $serializer->serialize(
@@ -30,13 +30,13 @@ class ApiAdherentController extends AbstractController
                 'groups' => ['listAdherentFull']
             ]
         );
-        return new JsonResponse($resultat, 200, [], true);
+        return new JsonResponse($resultat, Response::HTTP_OK, [], true);
     }
 
     /**
      * @Route("/api/adherents/{id}", name="api_adherents_show", methods={"GET"})
      */
-    public function show(Adherent $adherent, SerializerInterface $serializer)
+    public function show(Adherent $adherent, SerializerInterface $serializer): JsonResponse
     {
         $resultat = $serializer->serialize(
             $adherent,
@@ -52,29 +52,34 @@ class ApiAdherentController extends AbstractController
     /**
      * @Route("/api/adherents", name="api_adherents_create", methods={"POST"})
      */
-    public function create(Request $request, NationaliteRepository $repoNation, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
+    public function create(Request $request, NationaliteRepository $repoNation, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
         $data = $request->getContent();
         $dataTab = $serializer->decode($data, 'json');
-        $auteur = $repoNation->find($dataTab['nationalite']['id']);
-        $serializer->deserialize($data, Adherent::class, 'json', ['object_to_populate' => $auteur]);
-        $auteur->setNationalite($auteur);
-        $errors = $validator->validate($auteur);
+        $adherent = $serializer->deserialize($data, Adherent::class, 'json');
+
+        if (isset($dataTab['nationalite']['id'])) {
+            $nationalite = $repoNation->find($dataTab['nationalite']['id']);
+            if (!$nationalite) {
+                return new JsonResponse("Nationalité invalide ou introuvable", Response::HTTP_BAD_REQUEST);
+            }
+            $adherent->setNationalite($nationalite);
+        }
+        $errors = $validator->validate($adherent);
         if (count($errors)) {
             $errorsJson = $serializer->serialize($errors, 'json');
             return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST, [], true);
         }
-
-        $manager->persist($auteur);
+        $manager->persist($adherent);
         $manager->flush();
 
         return new JsonResponse(
-            "L'adherent a bien été créé",
+            "L'adhérent a bien été créé",
             Response::HTTP_CREATED,
             [
                 "location" => $this->generateUrl(
                     'api_adherents_show',
-                    ["id" => $auteur->getId()],
+                    ["id" => $adherent->getId()],
                     UrlGeneratorInterface::ABSOLUTE_URL
                 )
             ],
@@ -85,33 +90,37 @@ class ApiAdherentController extends AbstractController
     /**
      * @Route("/api/adherents/{id}", name="api_adherents_update", methods={"PUT"})
      */
-    public function edit(Adherent $adherent, NationaliteRepository $repoNation, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
+    public function edit(Adherent $adherent, NationaliteRepository $repoNation, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
         $data = $request->getContent();
         $dataTab = $serializer->decode($data, 'json');
-        $auteur = $repoNation->find($dataTab['nationalite']['id']);
         $serializer->deserialize($data, Adherent::class, 'json', ['object_to_populate' => $adherent]);
-        $adherent->setNationalite($auteur);
+        if (isset($dataTab['nationalite']['id'])) {
+            $nationalite = $repoNation->find($dataTab['nationalite']['id']);
+            if (!$nationalite) {
+                return new JsonResponse("Nationalité invalide ou introuvable", Response::HTTP_BAD_REQUEST);
+            }
+            $adherent->setNationalite($nationalite);
+        }
         $errors = $validator->validate($adherent);
         if (count($errors)) {
             $errorsJson = $serializer->serialize($errors, 'json');
             return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST, [], true);
         }
-
         $manager->persist($adherent);
         $manager->flush();
 
-        return new JsonResponse("L'adherent a bien été modifié", Response::HTTP_OK, [], true); 
+        return new JsonResponse("L'adhérent a bien été modifié", Response::HTTP_OK, [], true); 
     }
 
     /**
      * @Route("/api/adherents/{id}", name="api_adherents_delete", methods={"DELETE"})
      */
-    public function delete(Adherent $adherent, EntityManagerInterface $manager)
+    public function delete(Adherent $adherent, EntityManagerInterface $manager): JsonResponse
     {
         $manager->remove($adherent);
         $manager->flush();
 
-        return new JsonResponse("L'adherent a bien été supprimé", Response::HTTP_OK, []);
+        return new JsonResponse("L'adhérent a bien été supprimé", Response::HTTP_OK);
     }
 }
