@@ -19,7 +19,7 @@ class ApiEditeurController extends AbstractController
     /**
      * @Route("/api/editeurs", name="api_editeurs", methods={"GET"})
      */
-    public function list(EditeurRepository $repo, SerializerInterface $serializer)
+    public function list(EditeurRepository $repo, SerializerInterface $serializer): JsonResponse
     {
         $editeurs = $repo->findAll();
         $resultat = $serializer->serialize(
@@ -29,13 +29,13 @@ class ApiEditeurController extends AbstractController
                 'groups' => ['listEditeurFull']
             ]
         );
-        return new JsonResponse($resultat, 200, [], true);
+        return new JsonResponse($resultat, Response::HTTP_OK, [], true);
     }
 
     /**
      * @Route("/api/editeurs/{id}", name="api_editeurs_show", methods={"GET"})
      */
-    public function show(Editeur $editeur, SerializerInterface $serializer)
+    public function show(Editeur $editeur, SerializerInterface $serializer): JsonResponse
     {
         $resultat = $serializer->serialize(
             $editeur,
@@ -51,11 +51,11 @@ class ApiEditeurController extends AbstractController
     /**
      * @Route("/api/editeurs", name="api_editeurs_create", methods={"POST"})
      */
-    public function create(Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
+    public function create(Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
         $data = $request->getContent();
-        $editeur = new Editeur();
-        $serializer->deserialize($data, Editeur::class, 'json', ['object_to_populate' => $editeur]);
+        $dataTab = json_decode($data, true);
+        $editeur = $serializer->deserialize($data, Editeur::class, 'json');
 
         $errors = $validator->validate($editeur);
         if (count($errors)) {
@@ -83,9 +83,10 @@ class ApiEditeurController extends AbstractController
     /**
      * @Route("/api/editeurs/{id}", name="api_editeurs_update", methods={"PUT"})
      */
-    public function edit(Editeur $editeur, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
+    public function edit(Editeur $editeur, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
         $data = $request->getContent();
+        $dataTab = json_decode($data, true); 
         $serializer->deserialize($data, Editeur::class, 'json', ['object_to_populate' => $editeur]);
 
         $errors = $validator->validate($editeur);
@@ -102,7 +103,7 @@ class ApiEditeurController extends AbstractController
     /**
      * @Route("/api/editeurs/{id}", name="api_editeurs_delete", methods={"DELETE"})
      */
-    public function delete(Editeur $editeur, EntityManagerInterface $manager)
+    public function delete(Editeur $editeur, EntityManagerInterface $manager): JsonResponse
     {
         $manager->remove($editeur);
         $manager->flush();

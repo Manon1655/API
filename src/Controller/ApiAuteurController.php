@@ -49,9 +49,9 @@ class ApiAuteurController extends AbstractController
     /**
      * @Route("/api/auteurs", name="api_auteurs_create", methods={"POST"})
      */
-    public function create(Request $request,NationaliteRepository $repoNation,EntityManagerInterface $manager,SerializerInterface $serializer,ValidatorInterface $validator): JsonResponse {
+    public function create(Request $request, NationaliteRepository $repoNation, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse {
         $data = $request->getContent();
-        $dataTab = $serializer->decode($data, 'json');
+        $dataTab = json_decode($data, true);
         $auteur = $serializer->deserialize($data, Auteur::class, 'json');
         if (isset($dataTab['nationalite']['id'])) {
             $nationalite = $repoNation->find($dataTab['nationalite']['id']);
@@ -85,9 +85,9 @@ class ApiAuteurController extends AbstractController
     /**
      * @Route("/api/auteurs/{id}", name="api_auteurs_update", methods={"PUT"})
      */
-    public function edit(Auteur $auteur,NationaliteRepository $repoNation,Request $request,EntityManagerInterface $manager,SerializerInterface $serializer,ValidatorInterface $validator): JsonResponse {
+    public function edit(Auteur $auteur, NationaliteRepository $repoNation, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse {
         $data = $request->getContent();
-        $dataTab = $serializer->decode($data, 'json');
+        $dataTab = json_decode($data, true);
         $serializer->deserialize($data, Auteur::class, 'json', ['object_to_populate' => $auteur]);
 
         if (isset($dataTab['nationalite']['id'])) {

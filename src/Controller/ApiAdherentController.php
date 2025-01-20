@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Adherent;
+use App\Repository\PretRepository;
 use App\Repository\AdherentRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\NationaliteRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ApiAdherentController extends AbstractController
-{
+{ 
     /**
      * @Route("/api/adherents", name="api_adherents", methods={"GET"})
      */
@@ -52,17 +52,14 @@ class ApiAdherentController extends AbstractController
     /**
      * @Route("/api/adherents", name="api_adherents_create", methods={"POST"})
      */
-    public function create(Request $request, NationaliteRepository $repoNation, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
+    public function create(Request $request, PretRepository $repopret, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
         $data = $request->getContent();
-        $dataTab = $serializer->decode($data, 'json');
+        $dataTab = json_decode($data, true);
         $adherent = $serializer->deserialize($data, Adherent::class, 'json');
-
+    
         if (isset($dataTab['nationalite']['id'])) {
-            $nationalite = $repoNation->find($dataTab['nationalite']['id']);
-            if (!$nationalite) {
-                return new JsonResponse("Nationalité invalide ou introuvable", Response::HTTP_BAD_REQUEST);
-            }
+            $nationalite = $repopret->find($dataTab['nationalite']['id']);
             $adherent->setNationalite($nationalite);
         }
         $errors = $validator->validate($adherent);
@@ -72,7 +69,7 @@ class ApiAdherentController extends AbstractController
         }
         $manager->persist($adherent);
         $manager->flush();
-
+    
         return new JsonResponse(
             "L'adhérent a bien été créé",
             Response::HTTP_CREATED,
@@ -90,17 +87,15 @@ class ApiAdherentController extends AbstractController
     /**
      * @Route("/api/adherents/{id}", name="api_adherents_update", methods={"PUT"})
      */
-    public function edit(Adherent $adherent, NationaliteRepository $repoNation, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
+    public function edit(Adherent $adherent, PretRepository $repopret, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
         $data = $request->getContent();
-        $dataTab = $serializer->decode($data, 'json');
+        $dataTab = json_decode($data, true); 
         $serializer->deserialize($data, Adherent::class, 'json', ['object_to_populate' => $adherent]);
-        if (isset($dataTab['nationalite']['id'])) {
-            $nationalite = $repoNation->find($dataTab['nationalite']['id']);
-            if (!$nationalite) {
-                return new JsonResponse("Nationalité invalide ou introuvable", Response::HTTP_BAD_REQUEST);
-            }
-            $adherent->setNationalite($nationalite);
+        
+        if (isset($dataTab['pret']['id'])) {
+            $adh = $repopret->find($dataTab['pret']['id']);
+            $adherent->setAdh($adh);
         }
         $errors = $validator->validate($adherent);
         if (count($errors)) {
@@ -109,7 +104,7 @@ class ApiAdherentController extends AbstractController
         }
         $manager->persist($adherent);
         $manager->flush();
-
+    
         return new JsonResponse("L'adhérent a bien été modifié", Response::HTTP_OK, [], true); 
     }
 

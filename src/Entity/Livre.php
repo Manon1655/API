@@ -76,6 +76,7 @@ class Livre
 
     /**
      * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="livres")
+     * @Groups({"listLivreFull","listLivreSimple"})
      */
     private $pret;
 

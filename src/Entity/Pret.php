@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
+use App\Entity\Livre;
+use DateTimeInterface;
+use App\Entity\Adherent;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\PretRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -38,22 +40,22 @@ class Pret
     private $dateRetourRelle;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Adherent::class, inversedBy="prets")
-     * @Groups({"listAdherentFull", "listAdherentSimple"})
-     */
-    private $adh;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Livre::class, inversedBy="pret")
      */
     private $livre;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Adherent::class, inversedBy="pret")
+     * @Groups({"listPretFull","listAdherentFull"})
+     */
+    private $adherent;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDatePret(): ?\DateTimeInterface
+    public function getDatePret(): ?DateTimeInterface
     {
         return $this->datePret;
     }
@@ -89,18 +91,6 @@ class Pret
         return $this;
     }
 
-    public function getAdh(): ?Adherent
-    {
-        return $this->adh;
-    }
-
-    public function setAdh(?Adherent $adh): self
-    {
-        $this->adh = $adh;
-
-        return $this;
-    }
-
     public function getLivre(): ?Livre
     {
         return $this->livre;
@@ -109,6 +99,18 @@ class Pret
     public function setLivre(?Livre $livre): self
     {
         $this->livre = $livre;
+
+        return $this;
+    }
+
+    public function getAdherent(): ?Adherent
+    {
+        return $this->adherent;
+    }
+
+    public function setAdherent(?Adherent $adherent): self
+    {
+        $this->adherent = $adherent;
 
         return $this;
     }

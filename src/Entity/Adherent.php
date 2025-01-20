@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Pret;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AdherentRepository;
 use Doctrine\Common\Collections\Collection;
@@ -65,14 +64,14 @@ class Adherent
     private $mail;
 
     /**
-     * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="adh")
-     * @Groups({"listLivreFull", "listAdherentSimple"})
+     * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="adherent")
+     * @Groups({"listAdherentFull","listAdherentSimple"})
      */
-    private $prets;
+    private $pret;
 
     public function __construct()
     {
-        $this->prets = new ArrayCollection();
+        $this->pret = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -167,16 +166,16 @@ class Adherent
     /**
      * @return Collection<int, Pret>
      */
-    public function getPrets(): Collection
+    public function getPret(): Collection
     {
-        return $this->prets;
+        return $this->pret;
     }
 
     public function addPret(Pret $pret): self
     {
-        if (!$this->prets->contains($pret)) {
-            $this->prets[] = $pret;
-            $pret->setAdh($this);
+        if (!$this->pret->contains($pret)) {
+            $this->pret[] = $pret;
+            $pret->setAdherent($this);
         }
 
         return $this;
@@ -184,13 +183,14 @@ class Adherent
 
     public function removePret(Pret $pret): self
     {
-        if ($this->prets->removeElement($pret)) {
+        if ($this->pret->removeElement($pret)) {
             // set the owning side to null (unless already changed)
-            if ($pret->getAdh() === $this) {
-                $pret->setAdh(null);
+            if ($pret->getAdherent() === $this) {
+                $pret->setAdherent(null);
             }
         }
 
         return $this;
     }
+
 }
