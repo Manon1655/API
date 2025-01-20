@@ -94,8 +94,8 @@ class ApiAdherentController extends AbstractController
         $serializer->deserialize($data, Adherent::class, 'json', ['object_to_populate' => $adherent]);
         
         if (isset($dataTab['pret']['id'])) {
-            $adh = $repopret->find($dataTab['pret']['id']);
-            $adherent->setAdh($adh);
+            $adherent = $repopret->find($dataTab['pret']['id']);
+            $adherent->setAdherent($adherent);
         }
         $errors = $validator->validate($adherent);
         if (count($errors)) {
