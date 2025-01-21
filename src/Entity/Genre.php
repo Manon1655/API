@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use App\Entity\Livre;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\GenreRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -40,7 +42,7 @@ class Genre
 
     /**
      * @ORM\OneToMany(targetEntity=Livre::class, mappedBy="genre")
-     * @Groups({"listLivreFull", "listLivreSimple"})
+     * @Groups({"listGenreSimple","listGenreFull"})
      */
     private $livres;
 

@@ -2,9 +2,14 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Pret;
+use App\Entity\Genre;
+use App\Entity\Auteur;
+use App\Entity\Editeur;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\LivreRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -16,7 +21,7 @@ class Livre
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"listLivreFull","listLivreSimple"})
+     * @Groups({"listLivreFull", "listLivreSimple"})
      */
     private $id;
 
@@ -34,46 +39,46 @@ class Livre
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"listLivreFull","listLivreSimple"})
+     * @Groups({"listLivreFull", "listLivreSimple"})
      */
     private $prix;
 
     /**
      * @ORM\ManyToOne(targetEntity=Genre::class, inversedBy="livres")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"listAuteurFull"})
+     * @Groups({"listLivreFull", "listLivreSimple"})
      */
     private $genre;
 
     /**
      * @ORM\ManyToOne(targetEntity=Editeur::class, inversedBy="livres")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"listGenreFull","listAuteurFull"})
+     * @Groups({"listLivreFull", "listLivreSimple"})
      */
     private $editeur;
 
     /**
      * @ORM\ManyToOne(targetEntity=Auteur::class, inversedBy="livres")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"listGenreFull"})
+     * @Groups({"listLivreFull", "listLivreSimple"})
      */
     private $auteur;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups({"listGenreFull","listAuteurFull"})
+     * @Groups({"listLivreFull", "listLivreSimple"})
      */
     private $annee;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"listGenreFull","listAuteurFull"})
+     * @Groups({"listLivreFull", "listLivreSimple"})
      */
     private $langue;
 
     /**
      * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="livre")
-     * @Groups({"listLivreFull","listLivreSimple"})
+     * @Groups({"listLivreFull", "listLivreSimple"})
      */
     private $pret;
 

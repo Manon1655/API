@@ -16,13 +16,13 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ApiAdherentController extends AbstractController
-{ 
+{
     /**
      * @Route("/api/adherents", name="api_adherents", methods={"GET"})
      */
-    public function list(AdherentRepository $repo, SerializerInterface $serializer): JsonResponse
+    public function listAdherents(AdherentRepository $adherentRepository, SerializerInterface $serializer): JsonResponse
     {
-        $adherents = $repo->findAll();
+        $adherents = $adherentRepository->findAll();
         $resultat = $serializer->serialize(
             $adherents,
             'json',

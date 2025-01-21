@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use App\Entity\Livre;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\EditeurRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -22,13 +24,13 @@ class Editeur
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"listEditeurFull","listEditeurSimple","listLivreFull", "listLivreSimple"})
+     * @Groups({"listEditeurFull","listEditeurSimple"})
      */
     private $nom;
 
     /**
      * @ORM\OneToMany(targetEntity=Livre::class, mappedBy="editeur")
-     * @Groups({"listLivreFull", "listLivreSimple"})
+     * @Groups({"listEditeurFull","listEditeurSimple",})
      */
     private $livres;
 

@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use App\Entity\Auteur;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\NationaliteRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -28,6 +30,7 @@ class Nationalite
 
     /**
      * @ORM\OneToMany(targetEntity=Auteur::class, mappedBy="nationalite")
+     * @Groups({"listNationaliteFull","listNationaliteSimple"})
      */
     private $auteurs;
 

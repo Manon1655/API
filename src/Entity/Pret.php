@@ -17,36 +17,39 @@ class Pret
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"listPretFull","listPretSimple"})
+     * @Groups({"listPretFull", "listPretSimple", "listLivreFull", "listLivreSimple"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"listPretFull","listPretSimple"})
+     * @Groups({"listPretFull", "listPretSimple", "listLivreFull", "listLivreSimple"})
      */
     private $datePret;
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"listPretFull","listPretSimple"})
+     * @Groups({"listPretFull", "listPretSimple", "listLivreFull", "listLivreSimple"})
      */
     private $dateRetourPrevue;
 
     /**
-     * @ORM\Column(type="date")
-     * @Groups({"listPretFull","listPretSimple"})
+     * @ORM\Column(type="date", nullable=true)
+     * @Groups({"listPretFull", "listPretSimple", "listLivreFull", "listLivreSimple"})
      */
     private $dateRetourRelle;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Livre::class, inversedBy="pret")
+     * @ORM\ManyToOne(targetEntity=Livre::class, inversedBy="prets")
+     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"listPretFull", "listPretSimple"})
      */
     private $livre;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Adherent::class, inversedBy="pret")
-     * @Groups({"listPretFull","listAdherentFull"})
+     * @ORM\ManyToOne(targetEntity=Adherent::class, inversedBy="prets")
+     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"listPretFull", "listPretSimple"})
      */
     private $adherent;
 

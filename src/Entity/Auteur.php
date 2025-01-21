@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Livre;
 use App\Entity\Nationalite;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\AuteurRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -25,7 +26,7 @@ class Auteur
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"listGenreFull", "listAuteurFull", "listAuteurSimple"})
+     * @Groups({"listAuteurFull", "listAuteurSimple"})
      * @Assert\NotBlank(message="Le nom est obligatoire.")
      * @Assert\Length(
      *     max=255,
@@ -36,7 +37,7 @@ class Auteur
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"listGenreFull", "listAuteurFull", "listAuteurSimple"})
+     * @Groups({"listAuteurFull", "listAuteurSimple"})
      * @Assert\NotBlank(message="Le prénom est obligatoire.")
      * @Assert\Length(
      *     max=255,
@@ -47,13 +48,13 @@ class Auteur
 
     /**
      * @ORM\OneToMany(targetEntity=Livre::class, mappedBy="auteur")
-     * @Groups({"listLivreFull"})
+     * @Groups({"listAuteurFull", "listAuteurSimple"})
      */
     private $livres;
 
     /**
      * @ORM\ManyToOne(targetEntity=Nationalite::class, inversedBy="auteurs")
-     * @Groups({"listAuteurSimple","listNationaliteSimple"})
+     * @Groups({"listAuteurFull", "listAuteurSimple"})
      */
     private $nationalite;
 
