@@ -79,7 +79,7 @@ class Auteur
 
         return $this;
     }
-
+ 
     public function getPrenom(): ?string
     {
         return $this->prenom;

@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
+use App\Entity\Pret;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\AdherentRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=AdherentRepository::class)
@@ -24,42 +25,77 @@ class Adherent
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"listAdherentFull", "listAdherentSimple"})
+     * @Assert\NotBlank(message="Le nom est obligatoire.")
+     * @Assert\Length(
+     *    max=255,
+     *    maxMessage="Le nom ne doit pas dépasser {{ limit }} caractères."
+     * )
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"listAdherentFull", "listAdherentSimple"})
+     * @Assert\NotBlank(message="Le prénom est obligatoire.")
+     * @Assert\Length(
+     *    max=255,
+     *    maxMessage="Le prénom ne doit pas dépasser {{ limit }} caractères."
+     * )
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"listAdherentFull", "listAdherentSimple"})
+     * @Assert\NotBlank(message="L'adresse est obligatoire.")
+     * @Assert\Length(
+     *    max=255,
+     *    maxMessage="L'adresse ne doit pas dépasser {{ limit }} caractères."
+     * )
      */
     private $adresse;
 
     /**
      * @ORM\Column(type="integer")
      * @Groups({"listAdherentFull", "listAdherentSimple"})
+     * @Assert\NotBlank(message="Le code postal est obligatoire.")
+     * @Assert\Length(
+     *    min=5,
+     *    minMessage="Le code postal doit contenir {{ limit }} caractères."
+     * )
      */
     private $codePostal;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"listAdherentFull", "listAdherentSimple"})
+     * @Assert\NotBlank(message="La ville est obligatoire.")
+     * @Assert\Length(
+     *    max=255,
+     *    maxMessage="La ville ne doit pas dépasser {{ limit }} caractères."
+     * )
      */
     private $ville;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"listAdherentFull", "listAdherentSimple"})
+     * @Assert\NotBlank(message="Le téléphone est obligatoire.")
+     * @Assert\Length(
+     *    max=255,
+     *    maxMessage="Le téléphone ne doit pas dépasser {{ limit }} caractères."
+     * )
      */
     private $telephone;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"listAdherentFull", "listAdherentSimple"})
+     * @Assert\NotBlank(message="L'email est obligatoire.")
+     * @Assert\Length(
+     *    max=255,
+     *    maxMessage="L'email ne doit pas dépasser {{ limit }} caractères."
+     * )
      */
     private $mail;
 
@@ -204,6 +240,4 @@ class Adherent
 
         return $this;
     }
-
-
 }

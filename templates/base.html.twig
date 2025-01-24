@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8">
@@ -10,20 +9,32 @@
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">MyApp</a>
+            <a class="navbar-brand" href="#">API</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('api_genres') }}">Genres</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="{{ path('api_adherents') }}">Adherents</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('api_prets') }}">Prets</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('api_auteurs') }}">Auteurs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('api_editeurs') }}">Editeurs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('api_genres') }}">Genres</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('api_livres') }}">Livres</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('api_nationalites') }}">Nationalites</a>
                     </li>
                 </ul>
             </div>
@@ -35,17 +46,8 @@
                     <div class="col-md-4">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">Genres</h5>
-                                <p class="card-text">Voir la liste des genres.</p>
-                                <a href="{{ path('api_genres') }}" class="btn btn-primary">Voir</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
                                 <h5 class="card-title">Adherents</h5>
-                                <p class="card-text">Voir la liste des adherents.</p>
+                                <p class="card-text">Liste des Adhérents.</p>
                                 <a href="{{ path('api_adherents') }}" class="btn btn-primary">Voir</a>
                             </div>
                         </div>
@@ -54,8 +56,53 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Prets</h5>
-                                <p class="card-text">Voir la liste des prets.</p>
+                                <p class="card-text">Liste des Prêts.</p>
                                 <a href="{{ path('api_prets') }}" class="btn btn-primary">Voir</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Auteurs</h5>
+                                <p class="card-text">Liste des Auteurs.</p>
+                                <a href="{{ path('api_auteurs') }}" class="btn btn-primary">Voir</a>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Editeurs</h5>
+                                <p class="card-text">Liste des Editeurs.</p>
+                                <a href="{{ path('api_editeurs') }}" class="btn btn-primary">Voir</a>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Genres</h5>
+                                <p class="card-text">Liste des Genres.</p>
+                                <a href="{{ path('api_genres') }}" class="btn btn-primary">Voir</a>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Livres</h5>
+                                <p class="card-text">Liste des Livres.</p>
+                                <a href="{{ path('api_livres') }}" class="btn btn-primary">Voir</a>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Nationalites</h5>
+                                <p class="card-text">Liste des Nationalités.</p>
+                                <a href="{{ path('api_nationalites') }}" class="btn btn-primary">Voir</a>
                             </div>
                         </div>
                     </div>
@@ -67,7 +114,7 @@
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         {% block javascripts %}
-            {#{{ encore_entry_script_tags('app') }}#}
+          
         {% endblock %}
     </body>
 </html>
