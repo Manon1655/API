@@ -8,15 +8,15 @@
             Tableau des adhérents
         </h1>
         <div class="row">
-            {% for adherent in adherents %}
+            {% for adherents in adherent %}
                 <div class="col-md-3">
                     <div class="card border-primary mb-3" style="max-width: 20rem;">
                         <div class="card-header">
-                            {{ adherent.nom }}
+                            {{ adherents.nom }}
                         </div>
                         <div class="card-body">
                             <h4 class="card-title">
-                                {{ adherent.prenom }}
+                                {{ adherents.prenom }}
                             </h4>
                         </div>
                     </div>
@@ -25,11 +25,11 @@
             <div class="col-md-3">
                 <div class="card border-primary mb-3" style="max-width: 20rem;">
                     <div class="card-header">
-                        <strong>Email:</strong> {{ adherent.email }}
+                        <strong>Email:</strong> {{ adherents.email }}
                     </div>
                     <div class="card-body">
                         <h4 class="card-title">
-                            <strong>Téléphone:</strong> {{ adherent.telephone }}
+                            <strong>Téléphone:</strong> {{ adherents.telephone }}
                         </h4>
                     </div>
                 </div>
