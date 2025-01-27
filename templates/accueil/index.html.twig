@@ -1,0 +1,129 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}API Platform{% endblock %}
+
+{% block body %}
+<div class="container mt-5 text-center text-light">
+    <h1 class="display-3 font-weight-bold text-neon mb-4">Bienvenue sur API Platform</h1>
+    <hr class="glow my-4">
+
+    <div class="row mt-5">
+        <div class="col-md-4 mb-4">
+            <div class="card futuristic-card">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-neon">Adherents</h5>
+                    <p class="card-text text-muted">Accédez à la liste des adhérents</p>
+                    <a href="{{ path('api_adherents') }}" class="btn futuristic-btn">Explorer</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card futuristic-card">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-neon">Prêts</h5>
+                    <p class="card-text text-muted">Consultez toutes les informations des prêts en cours.</p>
+                    <a href="{{ path('api_prets') }}" class="btn futuristic-btn">Explorer</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card futuristic-card">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-neon">Auteurs</h5>
+                    <p class="card-text text-muted">Découvrez la liste complète des auteurs </p>
+                    <a href="{{ path('api_auteurs') }}" class="btn futuristic-btn">Explorer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-4 mb-4">
+            <div class="card futuristic-card">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-neon">Éditeurs</h5>
+                    <p class="card-text text-muted">Consultez les informations sur les éditeurs.</p>
+                    <a href="{{ path('api_editeurs') }}" class="btn futuristic-btn">Explorer</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card futuristic-card">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-neon">Genres</h5>
+                    <p class="card-text text-muted">Explorez les différents genres</p>
+                    <a href="{{ path('api_genres') }}" class="btn futuristic-btn">Explorer</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card futuristic-card">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-neon">Livres</h5>
+                    <p class="card-text text-muted">Parcourez les livres disponibles dans votre bibliothèque.</p>
+                    <a href="{{ path('api_livres') }}" class="btn futuristic-btn">Explorer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-4 offset-md-4">
+            <div class="card futuristic-card">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-neon">Nationalités</h5>
+                    <p class="card-text text-muted">Explorez les nationalités des auteurs.</p>
+                    <a href="{{ path('api_nationalites') }}" class="btn futuristic-btn">Explorer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background: #0d1117;
+        font-family: 'Roboto Mono', monospace;
+    }
+
+    .text-neon {
+        color:rgb(0, 255, 234);
+        text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
+    }
+
+    .glow {
+        border: none;
+        height: 2px;
+        background: linear-gradient(90deg, #00ffcc, #0066ff);
+        box-shadow: 0 0 15px #00ffcc;
+    }
+
+    .futuristic-card {
+        background: linear-gradient(145deg, #161b22, #21262d);
+        border: 1px solid #00ffcc;
+        box-shadow: 0 0 20px #00ffcc, 0 0 10px #0066ff inset;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .futuristic-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 30px #00ffcc, 0 0 20px #0066ff inset;
+    }
+
+    .futuristic-btn {
+        background: #00ffcc;
+        border: none;
+        color: #0d1117;
+        font-weight: bold;
+        padding: 10px 20px;
+        transition: all 0.3s ease-in-out;
+        text-transform: uppercase;
+    }
+
+    .futuristic-btn:hover {
+        background:rgb(0, 110, 255);
+        color: #fff;
+        box-shadow: 0 0 10px #0066ff, 0 0 20px #00ffcc;
+    }
+</style>
+{% endblock %}
