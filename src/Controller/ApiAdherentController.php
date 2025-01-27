@@ -6,6 +6,7 @@ use App\Entity\Adherent;
 use App\Repository\PretRepository;
 use App\Repository\AdherentRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\TextUI\XmlConfiguration\CodeCoverage\Report\Html;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,9 +21,9 @@ class ApiAdherentController extends AbstractController
     /**
      * @Route("/api/adherents", name="api_adherents", methods={"GET"})
      */
-    public function listAdherents(AdherentRepository $adherentRepository, SerializerInterface $serializer): JsonResponse
+    public function listAdherents(AdherentRepository $adherentRepository, SerializerInterface $serializer)
     {
-        $adherents = $adherentRepository->findAll();
+        $adherents = $adherentRepository->findAll(); 
         $resultat = $serializer->serialize(
             $adherents,
             'json',

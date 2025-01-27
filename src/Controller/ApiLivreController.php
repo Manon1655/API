@@ -22,7 +22,7 @@ class ApiLivreController extends AbstractController
     public function list(LivreRepository $repo, SerializerInterface $serializer)
     {
         $livres = $repo->findAll();
-        // dd($livres);
+
         $resultat = $serializer->serialize(
             $livres,
             'json',
