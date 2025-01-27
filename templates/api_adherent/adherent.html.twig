@@ -1,7 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ApiGenreController!{% endblock %}
-
+{% block title %}liste des adhérents{% endblock %}
 {% block body %}
+    <div class="container">
+        <h1>
+            Tableau des adhérents
+        </h1>
+        <div class="row">
+            {% for adherent in adherents %}
+                <div class="col-md-3">
+                    <div class="card border-primary mb-3" style="max-width: 20rem;">
+                        <div class="card-header">
+                            {{ adherent.nom }}
+                        </div>
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                {{ adherent.prenom }}
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
 
-{% endblock %}
+        

@@ -1,7 +1,24 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ApiGenreController!{% endblock %}
-
+{% block title %}liste des éditeurs{% endblock %}
 {% block body %}
-
-{% endblock %}
+    <div class="container">
+        <h1>
+            Tableau des éditeurs
+        </h1>
+        <div class="row">
+            {% for editeur in editeurs %}
+                <div class="col-md-3">
+                    <div class="card border-primary mb-3" style="max-width: 20rem;">
+                        <div class="card-header">
+                            {{ editeur.nom }}
+                        </div>
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                {{ editeur.prenom }}
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}

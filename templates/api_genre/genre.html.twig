@@ -1,23 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des Genres{% endblock %}
-
+{% block title %}liste des genres{% endblock %}
 {% block body %}
-    <h1>Liste des Genres</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nom</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="container">
+        <h1>
+            Tableau des genres
+        </h1>
+        <div class="row">
             {% for genre in genres %}
-                <tr>
-                    <td>{{ genre.id }}</td>
-                    <td>{{ genre.nom }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% endblock %}
+                <div class="col-md-3">
+                    <div class="card border-primary mb-3" style="max-width: 20rem;">
+                        <div class="card-header">
+                            {{ genre.libelle }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}

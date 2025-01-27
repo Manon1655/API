@@ -1,7 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ApiGenreController!{% endblock %}
-
+{% block title %}liste des nationalites{% endblock %}
 {% block body %}
-
-{% endblock %}
+    <div class="container">
+        <h1>
+            Tableau des nationalites
+        </h1>
+        <div class="row">
+            {% for nationalite in nationalites %}
+                <div class="col-md-3">
+                    <div class="card border-primary mb-3" style="max-width: 20rem;">
+                        <div class="card-header">
+                            {{ nationalite.libelle }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
