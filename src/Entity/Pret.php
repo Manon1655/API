@@ -49,7 +49,6 @@ class Pret
     /**
      * @ORM\ManyToOne(targetEntity=Adherent::class, inversedBy="prets")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"listPretFull", "listPretSimple"})
      */
     private $adherent;
 
