@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Pret;
 use App\Repository\PretRepository;
-use App\Repository\AdherentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +19,7 @@ class ApiPretController extends AbstractController
     /**
      * @Route("/api/prets", name="api_prets", methods={"GET"})
      */
-    public function list(PretRepository $repo, SerializerInterface $serializer): JsonResponse
+    public function list(PretRepository $repo, SerializerInterface $serializer)
     {
         $prets = $repo->findAll();
         $resultat = $serializer->serialize(
@@ -30,13 +29,13 @@ class ApiPretController extends AbstractController
                 'groups' => ['listPretFull']
             ]
         );
-        return new JsonResponse($resultat, Response::HTTP_OK, [], true);
+        return new JsonResponse($resultat,200,[],true);
     }
 
     /**
      * @Route("/api/prets/{id}", name="api_prets_show", methods={"GET"})
      */
-    public function show(Pret $pret, SerializerInterface $serializer): JsonResponse
+    public function show(Pret $pret, SerializerInterface $serializer)
     {
         $resultat = $serializer->serialize(
             $pret,
@@ -52,24 +51,18 @@ class ApiPretController extends AbstractController
     /**
      * @Route("/api/prets", name="api_prets_create", methods={"POST"})
      */
-    public function create(Request $request, AdherentRepository $repoadh, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
+    public function create(Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
-        $data = $request->getContent();
-        $dataTab = json_decode($data, true);
-        $pret = $serializer->deserialize($data, Pret::class, 'json');
-        if (isset($dataTab['pret']['id'])) {
-            $nationalite = $repoadh->find($dataTab['pret']['id']);
-            if (!$nationalite) {
-                return new JsonResponse("pret invalide ou introuvable", Response::HTTP_BAD_REQUEST);
-            }
-            $pret->setAdherent($pret);
-        }
+        $data=$request->getContent();
+        // $pret=new Pret();
+        // $serializer->deserialize($data, Pret::class,'json',['object_to_populate'=>$pret]);
+        $pret=$serializer->deserialize($data, Pret::class,'json');
 
         // gestion des erreurs de validation 
-        $errors = $validator->validate($pret);
-        if (count($errors)) {
-            $errorsJson = $serializer->serialize($errors, 'json');
-            return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST, [], true);
+        $errors=$validator->validate($pret);
+        if(count($errors)){
+            $errorsJson=$serializer->serialize($errors,'json');
+            return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST,[],true);
         }
 
         $manager->persist($pret);
@@ -78,55 +71,43 @@ class ApiPretController extends AbstractController
         return new JsonResponse(
             "Le pret a bien été créé",
             Response::HTTP_CREATED,
-            [
-                "location" => $this->generateUrl(
+            // ["location"=>"api/prets/".$pret->getId()],
+            ["location"=> $this->generateUrl(
                     'api_prets_show',
-                    ["id" => $pret->getId()],
-                    UrlGeneratorInterface::ABSOLUTE_URL
-                )
-            ],
-            true
-        );
+                ["id"=>$pret->getId()],
+                UrlGeneratorInterface::ABSOLUTE_URL)],
+            true);
     }
 
     /**
      * @Route("/api/prets/{id}", name="api_prets_update", methods={"PUT"})
      */
-    public function edit(Pret $pret, Request $request, AdherentRepository $repoadh, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
+    public function edit(Pret $pret,Request $request,EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
-        $data = $request->getContent();
-        $dataTab = json_decode($data, true);
-        $serializer->deserialize($data, Pret::class, 'json', ['object_to_populate' => $pret]);
-
-        if (isset($dataTab['adherent']['id'])) {
-            $adherent = $repoadh->find($dataTab['adherent']['id']);
-            if (!$adherent) {
-                return new JsonResponse("Adhérent invalide ou introuvable", Response::HTTP_BAD_REQUEST);
-            }
-            $pret->setAdherent($adherent);
-        }
+        $data=$request->getContent();
+        $serializer->deserialize($data, Pret::class,'json',['object_to_populate'=>$pret]);
 
         // gestion des erreurs de validation 
-        $errors = $validator->validate($pret);
-        if (count($errors)) {
-            $errorsJson = $serializer->serialize($errors, 'json');
-            return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST, [], true);
+        $errors=$validator->validate($pret);
+        if(count($errors)){
+            $errorsJson=$serializer->serialize($errors,'json');
+            return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST,[],true);
         }
 
         $manager->persist($pret);
         $manager->flush();
 
-        return new JsonResponse("Le pret a bien été modifié", Response::HTTP_OK, [], true); 
-}
+        return new JsonResponse("la pret a bien été modifié",Response::HTTP_OK,[],true); 
+    }
 
     /**
      * @Route("/api/prets/{id}", name="api_prets_delete", methods={"DELETE"})
      */
-    public function delete(Pret $pret, EntityManagerInterface $manager): JsonResponse
+    public function delete(Pret $pret,EntityManagerInterface $manager)
     {
         $manager->remove($pret);
         $manager->flush();
 
-        return new JsonResponse("Le pret a bien été supprimé", Response::HTTP_OK, []);
+        return new JsonResponse("La pret a bien été supprimé", Response::HTTP_OK, []);
     }
 }

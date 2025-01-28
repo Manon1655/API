@@ -78,13 +78,13 @@ class Livre
 
     /**
      * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="livre")
-     * @Groups({"listLivreFull", "listLivreSimple"})
+     * @Groups({"listPretFull", "listPretSimple"})
      */
-    private $pret;
+    private $prets;
 
     public function __construct()
     {
-        $this->pret = new ArrayCollection();
+        $this->prets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -191,15 +191,15 @@ class Livre
     /**
      * @return Collection<int, Pret>
      */
-    public function getPret(): Collection
+    public function getPrets(): Collection
     {
-        return $this->pret;
+        return $this->prets;
     }
 
     public function addPret(Pret $pret): self
     {
-        if (!$this->pret->contains($pret)) {
-            $this->pret[] = $pret;
+        if (!$this->prets->contains($pret)) {
+            $this->prets[] = $pret;
             $pret->setLivre($this);
         }
 
@@ -208,7 +208,7 @@ class Livre
 
     public function removePret(Pret $pret): self
     {
-        if ($this->pret->removeElement($pret)) {
+        if ($this->prets->removeElement($pret)) {
             // set the owning side to null (unless already changed)
             if ($pret->getLivre() === $this) {
                 $pret->setLivre(null);

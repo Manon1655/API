@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250120104106 extends AbstractMigration
+final class Version20250128082834 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,20 +20,16 @@ final class Version20250120104106 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE pret DROP FOREIGN KEY FK_52ECE979794A6F1F');
-        $this->addSql('DROP INDEX IDX_52ECE979794A6F1F ON pret');
-        $this->addSql('ALTER TABLE pret CHANGE adh_id adherent_id INT DEFAULT NULL');
+        $this->addSql('CREATE TABLE pret (id INT AUTO_INCREMENT NOT NULL, adherent_id INT DEFAULT NULL, livre_id INT DEFAULT NULL, date_pret DATE NOT NULL, date_retour_prevue DATE NOT NULL, date_retour_reelle DATE NOT NULL, INDEX IDX_52ECE97925F06C53 (adherent_id), INDEX IDX_52ECE97937D925CB (livre_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE pret ADD CONSTRAINT FK_52ECE97925F06C53 FOREIGN KEY (adherent_id) REFERENCES adherent (id)');
-        $this->addSql('CREATE INDEX IDX_52ECE97925F06C53 ON pret (adherent_id)');
+        $this->addSql('ALTER TABLE pret ADD CONSTRAINT FK_52ECE97937D925CB FOREIGN KEY (livre_id) REFERENCES livre (id)');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE pret DROP FOREIGN KEY FK_52ECE97925F06C53');
-        $this->addSql('DROP INDEX IDX_52ECE97925F06C53 ON pret');
-        $this->addSql('ALTER TABLE pret CHANGE adherent_id adh_id INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE pret ADD CONSTRAINT FK_52ECE979794A6F1F FOREIGN KEY (adh_id) REFERENCES adherent (id)');
-        $this->addSql('CREATE INDEX IDX_52ECE979794A6F1F ON pret (adh_id)');
+        $this->addSql('ALTER TABLE pret DROP FOREIGN KEY FK_52ECE97937D925CB');
+        $this->addSql('DROP TABLE pret');
     }
 }

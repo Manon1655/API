@@ -2,10 +2,8 @@
 
 namespace App\Entity;
 
-use App\Entity\Livre;
-use DateTimeInterface;
-use App\Entity\Adherent;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PretRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -17,47 +15,46 @@ class Pret
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"listPretFull", "listPretSimple", "listLivreFull", "listLivreSimple"})
+     * @Groups({"listPretFull", "listPretSimple"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"listPretFull", "listPretSimple", "listLivreFull", "listLivreSimple"})
+     * @Groups({"listPretFull", "listPretSimple"})
      */
     private $datePret;
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"listPretFull", "listPretSimple", "listLivreFull", "listLivreSimple"})
+     * @Groups({"listPretFull", "listPretSimple"})
      */
     private $dateRetourPrevue;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
-     * @Groups({"listPretFull", "listPretSimple", "listLivreFull", "listLivreSimple"})
-     */
-    private $dateRetourRelle;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Livre::class, inversedBy="prets")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="date")
      * @Groups({"listPretFull", "listPretSimple"})
      */
-    private $livre;
+    private $dateRetourReelle;
 
     /**
      * @ORM\ManyToOne(targetEntity=Adherent::class, inversedBy="prets")
-     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"listPretFull", "listPretSimple"})
      */
     private $adherent;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Livre::class, inversedBy="prets")
+     * @Groups({"listLivreFull", "listLivreSimple"})
+     */
+    private $livre;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDatePret(): ?DateTimeInterface
+    public function getDatePret(): ?\DateTimeInterface
     {
         return $this->datePret;
     }
@@ -81,26 +78,14 @@ class Pret
         return $this;
     }
 
-    public function getDateRetourRelle(): ?\DateTimeInterface
+    public function getDateRetourReelle(): ?\DateTimeInterface
     {
-        return $this->dateRetourRelle;
+        return $this->dateRetourReelle;
     }
 
-    public function setDateRetourRelle(\DateTimeInterface $dateRetourRelle): self
+    public function setDateRetourReelle(\DateTimeInterface $dateRetourReelle): self
     {
-        $this->dateRetourRelle = $dateRetourRelle;
-
-        return $this;
-    }
-
-    public function getLivre(): ?Livre
-    {
-        return $this->livre;
-    }
-
-    public function setLivre(?Livre $livre): self
-    {
-        $this->livre = $livre;
+        $this->dateRetourReelle = $dateRetourReelle;
 
         return $this;
     }
@@ -113,6 +98,18 @@ class Pret
     public function setAdherent(?Adherent $adherent): self
     {
         $this->adherent = $adherent;
+
+        return $this;
+    }
+
+    public function getLivre(): ?Livre
+    {
+        return $this->livre;
+    }
+
+    public function setLivre(?Livre $livre): self
+    {
+        $this->livre = $livre;
 
         return $this;
     }
