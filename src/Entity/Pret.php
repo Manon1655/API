@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\PretRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -42,6 +41,16 @@ class Pret
      * @Groups({"listPretFull", "listPretSimple"})
      */
     private $adherent;
+
+    /**
+     * @Groups({"listPretFull", "listPretSimple"})
+     */
+    private $nomAdherent;
+
+    /**
+     * @Groups({"listPretFull", "listPretSimple"})
+     */
+    private $prenomAdherent;
 
     /**
      * @ORM\ManyToOne(targetEntity=Livre::class, inversedBy="prets")
@@ -110,6 +119,46 @@ class Pret
     public function setLivre(?Livre $livre): self
     {
         $this->livre = $livre;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of nomAdherent
+     */ 
+    public function getNomAdherent()
+    {
+        return $this->nomAdherent;
+    }
+
+    /**
+     * Set the value of nomAdherent
+     *
+     * @return  self
+     */ 
+    public function setNomAdherent($nomAdherent)
+    {
+        $this->nomAdherent = $nomAdherent;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of prenomAdherent
+     */ 
+    public function getPrenomAdherent()
+    {
+        return $this->prenomAdherent;
+    }
+
+    /**
+     * Set the value of prenomAdherent
+     *
+     * @return  self
+     */ 
+    public function setPrenomAdherent($prenomAdherent)
+    {
+        $this->prenomAdherent = $prenomAdherent;
 
         return $this;
     }

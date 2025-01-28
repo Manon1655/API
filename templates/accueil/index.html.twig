@@ -1,28 +1,31 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}API Platform{% endblock %}
+{% block title %}API {% endblock %}
 
 {% block body %}
 <div class="container mt-5 text-center text-light">
-    <h1 class="display-3 font-weight-bold text-neon mb-4">API</h1>
+    <h1 class="display-3 font-weight-bold animate-glitch">API</h1>
 
     <hr class="glow my-4">
 
     <div class="row mt-5">
         {% set items = [
-            {'title': 'Adhérents', 'description': 'Accédez à la liste des adhérents', 'route': 'api_adherents'},
-            {'title': 'Prêts', 'description': 'Consultez toutes les informations des prêts en cours.', 'route': 'api_prets'},
-            {'title': 'Auteurs', 'description': 'Découvrez la liste complète des auteurs', 'route': 'api_auteurs'},
-            {'title': 'Éditeurs', 'description': 'Consultez les informations sur les éditeurs.', 'route': 'api_editeurs'},
-            {'title': 'Genres', 'description': 'Explorez les différents genres', 'route': 'api_genres'},
-            {'title': 'Livres', 'description': 'Parcourez les livres disponibles dans votre bibliothèque.', 'route': 'api_livres'},
-            {'title': 'Nationalités', 'description': 'Explorez les nationalités des auteurs.', 'route': 'api_nationalites'}
+            {'title': 'Adhérents', 'description': 'Accédez à la liste des adhérents', 'route': 'api_adherents', 'icon': 'fas fa-users'},
+            {'title': 'Prêts', 'description': 'Consultez toutes les informations des prêts en cours.', 'route': 'api_prets', 'icon': 'fas fa-credit-card'},
+            {'title': 'Auteurs', 'description': 'Découvrez la liste complète des auteurs', 'route': 'api_auteurs', 'icon': 'fas fa-pen-nib'},
+            {'title': 'Éditeurs', 'description': 'Consultez les informations sur les éditeurs.', 'route': 'api_editeurs', 'icon': 'fas fa-building'},
+            {'title': 'Genres', 'description': 'Explorez les différents genres', 'route': 'api_genres', 'icon': 'fas fa-tags'},
+            {'title': 'Livres', 'description': 'Parcourez les livres disponibles dans votre bibliothèque.', 'route': 'api_livres', 'icon': 'fas fa-book'},
+            {'title': 'Nationalités', 'description': 'Explorez les nationalités des auteurs.', 'route': 'api_nationalites', 'icon': 'fas fa-flag'}
         ] %}
 
         {% for item in items %}
             <div class="col-md-4 mb-4">
                 <div class="card futuristic-card">
                     <div class="card-body text-center">
+                        <div class="icon-container">
+                            <i class="{{ item.icon }}"></i>
+                        </div>
                         <h5 class="card-title text-neon">{{ item.title }}</h5>
                         <p class="card-text text-muted">{{ item.description }}</p>
                         <a href="{{ path(item.route) }}" class="btn futuristic-btn">Explorer</a>
@@ -36,7 +39,6 @@
 <canvas id="backgroundCanvas"></canvas>
 
 <style>
-
     html, body {
         margin: 0;
         padding: 0;
@@ -54,7 +56,7 @@
         width: 100%;
         height: 100%;
         z-index: -1;
-        background-color: #000;
+        background-color: #0a0a0a;
     }
 
     .container {
@@ -62,9 +64,26 @@
         z-index: 1;
     }
 
-    .text-neon {
-        color: rgb(0, 255, 234);
-        text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00cc99;
+    .animate-glitch {
+        color: #00ffcc;
+        font-size: 4rem;
+        position: relative;
+        animation: glitch 2.5s infinite;
+    }
+
+    @keyframes glitch {
+        0% {
+            text-shadow: 2px 0 red, -2px 0 blue;
+        }
+        20% {
+            text-shadow: -2px -2px lime, 2px 2px magenta;
+        }
+        40% {
+            text-shadow: 3px 0 red, -3px 0 blue;
+        }
+        100% {
+            text-shadow: 0 0 10px cyan, 0 0 20px magenta;
+        }
     }
 
     .glow {
@@ -72,100 +91,143 @@
         height: 2px;
         background: linear-gradient(90deg, #00ffcc, #0066ff);
         box-shadow: 0 0 15px #00ffcc;
-        background-color: #000;
     }
 
     .futuristic-card {
-        background: linear-gradient(145deg, #161b22, #21262d);
-        border: 1px solid rgba(0, 255, 204, 0.5);
-        box-shadow: 0 0 20px rgba(0, 255, 204, 0.3), 0 0 10px rgba(0, 102, 255, 0.2) inset;
-        border-radius: 15px;
+        background: linear-gradient(145deg, #121212, #1f1f1f);
+        border: 1px solid rgba(0, 255, 204, 0.68);
+        border-radius: 20px;
         transition: transform 0.4s ease, box-shadow 0.4s ease;
-        background-color: #000;
+        box-shadow: 0 4px 20px rgb(0, 4, 255), 0 0 20px rgba(0, 102, 255, 0.1) inset;
+        padding: 5px;
     }
 
     .futuristic-card:hover {
-        transform: translateY(-5px) scale(1.05);
-        box-shadow: 0 0 30px rgba(0, 255, 204, 0.5), 0 0 20px rgba(0, 102, 255, 0.3) inset;
-        background-color: #000;
+        transform: translateY(-10px) scale(1.05);
+        box-shadow: 0 8px 30px rgb(0, 255, 204), 0 0 25px rgba(0, 102, 255, 0.2) inset;
+    }
+
+    .futuristic-card .card-title {
+        color:rgb(255, 255, 255);
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        text-shadow: 0 0 8px rgba(0, 255, 204, 0.6);
+    }
+
+    .futuristic-card .icon-container {
+        font-size: 3rem;
+        color: #00ffcc;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+            filter: brightness(1);
+        }
+        50% {
+            transform: scale(1.2);
+            filter: brightness(1.5);
+        }
     }
 
     .futuristic-btn {
         background: linear-gradient(90deg, #00ffcc, #0066ff);
         border: none;
-        color: #0d1117;
-        font-weight: bold;
-        padding: 12px 24px;
-        border-radius: 30px;
+        color: white;
+        padding: 10px 25px;
+        border-radius: 25px;
         text-transform: uppercase;
-        transition: all 0.3s ease-in-out;
-        background-color: #000;
+        font-size: 1.2rem;
+        font-weight: bold;
+        transition: 0.3s ease;
+        box-shadow: 0 0 10px rgba(0, 255, 204, 0.8);
     }
 
     .futuristic-btn:hover {
         background: linear-gradient(90deg, #0066ff, #00ffcc);
         color: #fff;
-        box-shadow: 0 0 10px #0066ff, 0 0 20px #00ffcc;
-        background-color: #000;
+        box-shadow: 0 0 20px #00ffcc, 0 0 30px #0066ff;
     }
 </style>
 
 <script>
     const canvas = document.getElementById('backgroundCanvas');
     const ctx = canvas.getContext('2d');
-    
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const particles = [];
-    const colors = ['#00ffcc', '#0066ff', '#00cc99'];
+    let particlesArray = [];
 
-    class Particle {
-        constructor() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.radius = Math.random() * 3;
-            this.color = colors[Math.floor(Math.random() * colors.length)];
-            this.speedX = (Math.random() - 0.5) * 2;
-            this.speedY = (Math.random() - 0.5) * 2;
+    class TrailParticle {
+        constructor(x, y, size, color, velocityX, velocityY) {
+            this.x = x;
+            this.y = y;
+            this.size = size;
+            this.color = color;
+            this.velocityX = velocityX;
+            this.velocityY = velocityY;
+            this.history = [];
+        }
+
+        update() {
+            this.history.push({ x: this.x, y: this.y });
+            if (this.history.length > 10) this.history.shift();
+
+            this.x += this.velocityX;
+            this.y += this.velocityY;
+
+            if (this.x < 0 || this.x > canvas.width) this.velocityX *= -1;
+            if (this.y < 0 || this.y > canvas.height) this.velocityY *= -1;
+
+            this.draw();
         }
 
         draw() {
             ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.moveTo(this.x, this.y);
+            this.history.forEach((point, index) => {
+                const alpha = index / this.history.length;
+                ctx.lineTo(point.x, point.y);
+                ctx.strokeStyle = `rgba(0, 255, 255, ${alpha})`;
+                ctx.lineWidth = 2;
+            });
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
             ctx.fillStyle = this.color;
             ctx.fill();
-        }
-
-        update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-
-            if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-            if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-
-            this.draw();
         }
     }
 
     function initParticles() {
-        for (let i = 0; i < 200; i++) {
-            particles.push(new Particle());
+        particlesArray = [];
+        for (let i = 0; i < 150; i++) {
+            const size = Math.random() * 4;
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            const velocityX = (Math.random() - 0.5) * 2;
+            const velocityY = (Math.random() - 0.5) * 2;
+            const color = `rgba(${Math.random() * 255}, ${Math.random() * 255}, 255, 0.7)`;
+            particlesArray.push(new TrailParticle(x, y, size, color, velocityX, velocityY));
         }
     }
 
-    function animate() {
+    function animateParticles() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => p.update());
-        requestAnimationFrame(animate);
+        particlesArray.forEach(particle => particle.update());
+        requestAnimationFrame(animateParticles);
     }
 
     initParticles();
-    animate();
+    animateParticles();
 
     window.addEventListener('resize', () => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+        initParticles();
     });
 </script>
 {% endblock %}

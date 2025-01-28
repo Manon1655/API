@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Adherent;
+use App\Repository\PretRepository;
 use App\Repository\AdherentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,64 +52,64 @@ class ApiAdherentController extends AbstractController
     /**
      * @Route("/api/adherents", name="api_adherents_create", methods={"POST"})
      */
-    // public function create(Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
-    // {
-    //     $data = $request->getContent();
-    //     $dataTab = json_decode($data, true);
-    //     $adherent = $serializer->deserialize($data, Adherent::class, 'json');
+    public function create(Request $request, PretRepository $repopret, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
+    {
+        $data = $request->getContent();
+        $dataTab = json_decode($data, true);
+        $adherent = $serializer->deserialize($data, Adherent::class, 'json');
         
-    //     if (isset($dataTab['pret']['id'])) {
-    //         $pret = $repopret->find($dataTab['pret']['id']);
-    //         if (!$pret) {
-    //             return new JsonResponse("Prêt invalide ou introuvable", Response::HTTP_BAD_REQUEST);
-    //         }
-    //         $adherent->addPret($pret); 
-    //     }
-    //     $errors = $validator->validate($adherent);
-    //     if (count($errors)) {
-    //         $errorsJson = $serializer->serialize($errors, 'json');
-    //         return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST, [], true);
-    //     }
-    //     $manager->persist($adherent);
-    //     $manager->flush();
+        if (isset($dataTab['pret']['id'])) {
+            $pret = $repopret->find($dataTab['pret']['id']);
+            if (!$pret) {
+                return new JsonResponse("Prêt invalide ou introuvable", Response::HTTP_BAD_REQUEST);
+            }
+            $adherent->addPret($pret); 
+        }
+        $errors = $validator->validate($adherent);
+        if (count($errors)) {
+            $errorsJson = $serializer->serialize($errors, 'json');
+            return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST, [], true);
+        }
+        $manager->persist($adherent);
+        $manager->flush();
         
-    //     return new JsonResponse(
-    //         "L'adhérent a bien été créé",
-    //         Response::HTTP_CREATED,
-    //         [
-    //             "location" => $this->generateUrl(
-    //                 'api_adherents_show',
-    //                 ["id" => $adherent->getId()],
-    //                 UrlGeneratorInterface::ABSOLUTE_URL
-    //             )
-    //         ],
-    //         true
-    //     );
-    // }
+        return new JsonResponse(
+            "L'adhérent a bien été créé",
+            Response::HTTP_CREATED,
+            [
+                "location" => $this->generateUrl(
+                    'api_adherents_show',
+                    ["id" => $adherent->getId()],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                )
+            ],
+            true
+        );
+    }
 
     /**
      * @Route("/api/adherents/{id}", name="api_adherents_update", methods={"PUT"})
      */
-    // public function edit(Adherent $adherent, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
-    // {
-    //     $data = $request->getContent();
-    //     $dataTab = json_decode($data, true); 
-    //     $serializer->deserialize($data, Adherent::class, 'json', ['object_to_populate' => $adherent]);
+    public function edit(Adherent $adherent, PretRepository $repopret, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
+    {
+        $data = $request->getContent();
+        $dataTab = json_decode($data, true); 
+        $serializer->deserialize($data, Adherent::class, 'json', ['object_to_populate' => $adherent]);
         
-    //     if (isset($dataTab['pret']['id'])) {
-    //         $adherent = $repopret->find($dataTab['pret']['id']);
-    //         $adherent->setAdherent($adherent);
-    //     }
-    //     $errors = $validator->validate($adherent);
-    //     if (count($errors)) {
-    //         $errorsJson = $serializer->serialize($errors, 'json');
-    //         return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST, [], true);
-    //     }
-    //     $manager->persist($adherent);
-    //     $manager->flush();
+        if (isset($dataTab['pret']['id'])) {
+            $adherent = $repopret->find($dataTab['pret']['id']);
+            $adherent->setAdherent($adherent);
+        }
+        $errors = $validator->validate($adherent);
+        if (count($errors)) {
+            $errorsJson = $serializer->serialize($errors, 'json');
+            return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST, [], true);
+        }
+        $manager->persist($adherent);
+        $manager->flush();
     
-    //     return new JsonResponse("L'adhérent a bien été modifié", Response::HTTP_OK, [], true); 
-    // }
+        return new JsonResponse("L'adhérent a bien été modifié", Response::HTTP_OK, [], true); 
+    }
 
     /**
      * @Route("/api/adherents/{id}", name="api_adherents_delete", methods={"DELETE"})
