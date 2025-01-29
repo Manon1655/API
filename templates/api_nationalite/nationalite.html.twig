@@ -18,7 +18,9 @@
                                 <strong class="neon-text">Libellé:</strong> {{ nationalite.libelle }}<br>
                                 <strong class="neon-text">Auteurs:</strong> 
                                 {% if nationalite.auteurs is iterable %}
-                                    {{ nationalite.auteurs|join(', ') }}
+                                    {% for auteur in nationalite.auteurs %}
+                                        {{ auteur.nom }}
+                                    {% endfor %}
                                 {% else %}
                                     {{ nationalite.auteurs }}
                                 {% endif %}
