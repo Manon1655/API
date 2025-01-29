@@ -82,65 +82,27 @@
 
     .glow {
         border: none;
-        height: 2px;
-        background: linear-gradient(90deg, #00ffcc, #0066ff);
-        box-shadow: 0 0 15px #00ffcc;
+        height: 3px;
+        box-shadow: 0 0 20px #00ffcc, 0 0 30pxrgb(0, 38, 255);
     }
 
     .futuristic-card {
-        background: linear-gradient(145deg, #121212, #1f1f1f);
-        border: 1px solid rgba(0, 255, 204, 0.68);
-        border-radius: 20px;
-        transition: transform 0.4s ease, box-shadow 0.4s ease;
-        box-shadow: 0 4px 20px rgb(0, 4, 255), 0 0 20px rgba(0, 102, 255, 0.1) inset;
-        padding: 10px;
+        background: linear-gradient(145deg,rgb(0, 0, 0),rgb(0, 0, 0));
+        border: 1px solid rgba(0, 255, 204, 0.5);
+        border-radius: 15px;
+        transform-style: preserve-3d;
+        transition: all 0.5s ease;
+        box-shadow: 0 0 30px rgba(0, 255, 204, 0.3), 0 0 20px rgba(0, 102, 255, 0.3) inset;
         height: 100%;
-        flex-direction: column;
-        justify-content: space-between;
     }
 
     .futuristic-card:hover {
-        transform: translateY(-10px) scale(1.05);
-        box-shadow: 0 8px 30px rgb(0, 255, 204), 0 0 25px rgba(0, 102, 255, 0.2) inset;
-    }
-
-    .futuristic-card .card-title {
-        color: white;
-        font-size: 1.5rem;
-        font-weight: bold;
-        text-transform: uppercase;
-        margin-bottom: 10px;
-        text-shadow: 0 0 8px rgba(0, 255, 204, 0.6);
-    }
-
-    .futuristic-card .card-text {
-        color: white; 
-    }
-
-    .neon-text {
-        color: white;
-        text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 40px #00ffcc;
-    }
-
-    .futuristic-card .icon-container {
-        font-size: 3rem;
-        color: #00ffcc;
-        animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-        0%, 100% {
-            transform: scale(1);
-            filter: brightness(1);
-        }
-        50% {
-            transform: scale(1.2);
-            filter: brightness(1.5);
-        }
+        transform: translateY(-10px) rotateX(8deg) rotateY(-5deg);
+        box-shadow: 0 0 40px rgba(0, 255, 255, 0.5), 0 0 20px rgba(0, 102, 255, 0.3) inset;
     }
 
     .futuristic-btn {
-        background: linear-gradient(90deg, #00ffcc, #0066ff);
+        background: linear-gradient(90deg, #00ffcc,rgb(17, 0, 255),rgb(83, 105, 138));
         border: none;
         color: white;
         padding: 10px 25px;
@@ -158,19 +120,11 @@
         box-shadow: 0 0 20px #00ffcc, 0 0 30px #0066ff;
     }
 
-    .row {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .col-md-4 {
-        justify-content: center;
-        margin-bottom: 1rem;
-    }
-
     .card-body {
+        display: flex;
         flex-direction: column;
         justify-content: space-between;
+        height: 100%;
     }
 
     .futuristic-card .card-header, .futuristic-card .card-text {
@@ -184,75 +138,34 @@
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    let particlesArray = [];
+    const columns = Math.floor(canvas.width / 20);
+    const drops = Array(columns).fill(1);
+    const chars = "0123456789ABCDEF".split("");
 
-    class TrailParticle {
-        constructor(x, y, size, color, velocityX, velocityY) {
-            this.x = x;
-            this.y = y;
-            this.size = size;
-            this.color = color;
-            this.velocityX = velocityX;
-            this.velocityY = velocityY;
-            this.history = [];
-        }
-
-        update() {
-            this.history.push({ x: this.x, y: this.y });
-            if (this.history.length > 10) this.history.shift();
-
-            this.x += this.velocityX;
-            this.y += this.velocityY;
-
-            if (this.x < 0 || this.x > canvas.width) this.velocityX *= -1;
-            if (this.y < 0 || this.y > canvas.height) this.velocityY *= -1;
-
-            this.draw();
-        }
-
-        draw() {
-            ctx.beginPath();
-            ctx.moveTo(this.x, this.y);
-            this.history.forEach((point, index) => {
-                const alpha = index / this.history.length;
-                ctx.lineTo(point.x, point.y);
-                ctx.strokeStyle = `rgba(0, 255, 255, ${alpha})`;
-                ctx.lineWidth = 2;
-            });
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fillStyle = this.color;
-            ctx.fill();
-        }
+    function drawMatrix() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#00ffcc';
+        ctx.font = '16px monospace';
+        
+        drops.forEach((y, x) => {
+            const text = chars[Math.floor(Math.random() * chars.length)];
+            ctx.fillText(text, x * 20, y * 20);
+            
+            if (y * 20 > canvas.height && Math.random() > 0.975) {
+                drops[x] = 0;
+            }
+            drops[x]++;
+        });
     }
 
-    function initParticles() {
-        particlesArray = [];
-        for (let i = 0; i < 150; i++) {
-            const size = Math.random() * 4;
-            const x = Math.random() * canvas.width;
-            const y = Math.random() * canvas.height;
-            const velocityX = (Math.random() - 0.5) * 2;
-            const velocityY = (Math.random() - 0.5) * 2;
-            const color = `rgba(${Math.random() * 255}, ${Math.random() * 255}, 255, 0.7)`;
-            particlesArray.push(new TrailParticle(x, y, size, color, velocityX, velocityY));
-        }
-    }
-
-    function animateParticles() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particlesArray.forEach(particle => particle.update());
-        requestAnimationFrame(animateParticles);
-    }
-
-    initParticles();
-    animateParticles();
+    setInterval(drawMatrix, 50);
 
     window.addEventListener('resize', () => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        initParticles();
+        drops.length = Math.floor(canvas.width / 20);
+        drops.fill(1);
     });
 </script>
 {% endblock %}
