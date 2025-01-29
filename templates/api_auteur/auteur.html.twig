@@ -1,24 +1,259 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}liste des auteurs{% endblock %}
+{% block title %}
+    Liste des adhérents
+{% endblock %}
 {% block body %}
+    <canvas id="backgroundCanvas"></canvas>
     <div class="container">
-        <h1>
-            Tableau des auteurs
+        <h1 class="animate-glitch text-center">
+           auteurs
         </h1>
         <div class="row">
             {% for auteur in auteurs %}
-                <div class="col-md-3">
-                    <div class="card border-primary mb-3" style="max-width: 20rem;">
-                        <div class="card-header">
-                            {{ auteur.nom }}
-                        </div>
+                <div class="col-md-4">
+                    <div class="card futuristic-card mb-2" style="max-width: 20rem; margin-bottom: 1rem;">
                         <div class="card-body">
                             <h4 class="card-title">
-                                {{ auteur.prenom }}
+                                {{ auteur.prenom }} {{ auteur.nom }}
                             </h4>
+                            <p class="card-text">
+                                <strong class="neon-text">ID:</strong> {{ auteur.id }}<br>
+                                <strong class="neon-text">Nationalité:</strong> {{ auteur.nationalite }}<br>
+                                <strong class="neon-text">Livres:</strong> 
+                                {% if auteur.livres is iterable %}
+                                    {{ auteur.livres|join(', ') }}
+                                {% else %}
+                                    {{ auteur.livres }}
+                                {% endif %}
+                            </p>
                         </div>
                     </div>
                 </div>
-            </div>
-        {% endblock %}
+            {% endfor %}
+        </div>
+    </div>
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        font-family: 'Roboto Mono', monospace;
+        background-color: #000;
+        color: white; 
+    }
+
+    canvas#backgroundCanvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background-color: #0a0a0a;
+    }
+
+    .container {
+        position: relative;
+        z-index: 1;
+    }
+
+    .animate-glitch {
+        color: white; 
+        font-size: 4rem;
+        position: relative;
+        animation: glitch 2.5s infinite;
+    }
+
+    @keyframes glitch {
+        0% {
+            text-shadow: 2px 0 red, -2px 0 blue;
+        }
+        20% {
+            text-shadow: -2px -2px lime, 2px 2px magenta;
+        }
+        40% {
+            text-shadow: 3px 0 red, -3px 0 blue;
+        }
+        100% {
+            text-shadow: 0 0 10px cyan, 0 0 20px magenta;
+        }
+    }
+
+    .glow {
+        border: none;
+        height: 2px;
+        background: linear-gradient(90deg, #00ffcc, #0066ff);
+        box-shadow: 0 0 15px #00ffcc;
+    }
+
+    .futuristic-card {
+        background: linear-gradient(145deg, #121212, #1f1f1f);
+        border: 1px solid rgba(0, 255, 204, 0.68);
+        border-radius: 20px;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+        box-shadow: 0 4px 20px rgb(0, 4, 255), 0 0 20px rgba(0, 102, 255, 0.1) inset;
+        padding: 10px;
+        height: 100%;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .futuristic-card:hover {
+        transform: translateY(-10px) scale(1.05);
+        box-shadow: 0 8px 30px rgb(0, 255, 204), 0 0 25px rgba(0, 102, 255, 0.2) inset;
+    }
+
+    .futuristic-card .card-title {
+        color: white;
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        text-shadow: 0 0 8px rgba(0, 255, 204, 0.6);
+    }
+
+    .futuristic-card .card-text {
+        color: white; 
+    }
+
+    .neon-text {
+        color: white;
+        text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 40px #00ffcc;
+    }
+
+    .futuristic-card .icon-container {
+        font-size: 3rem;
+        color: #00ffcc;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+            filter: brightness(1);
+        }
+        50% {
+            transform: scale(1.2);
+            filter: brightness(1.5);
+        }
+    }
+
+    .futuristic-btn {
+        background: linear-gradient(90deg, #00ffcc, #0066ff);
+        border: none;
+        color: white;
+        padding: 10px 25px;
+        border-radius: 25px;
+        text-transform: uppercase;
+        font-size: 1.2rem;
+        font-weight: bold;
+        transition: 0.3s ease;
+        box-shadow: 0 0 10px rgba(0, 255, 204, 0.8);
+    }
+
+    .futuristic-btn:hover {
+        background: linear-gradient(90deg, #0066ff, #00ffcc);
+        color: #fff;
+        box-shadow: 0 0 20px #00ffcc, 0 0 30px #0066ff;
+    }
+
+    .row {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .col-md-4 {
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+
+    .card-body {
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .futuristic-card .card-header, .futuristic-card .card-text {
+        color: white; 
+    }
+</style>
+
+<script>
+    const canvas = document.getElementById('backgroundCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particlesArray = [];
+
+    class TrailParticle {
+        constructor(x, y, size, color, velocityX, velocityY) {
+            this.x = x;
+            this.y = y;
+            this.size = size;
+            this.color = color;
+            this.velocityX = velocityX;
+            this.velocityY = velocityY;
+            this.history = [];
+        }
+
+        update() {
+            this.history.push({ x: this.x, y: this.y });
+            if (this.history.length > 10) this.history.shift();
+
+            this.x += this.velocityX;
+            this.y += this.velocityY;
+
+            if (this.x < 0 || this.x > canvas.width) this.velocityX *= -1;
+            if (this.y < 0 || this.y > canvas.height) this.velocityY *= -1;
+
+            this.draw();
+        }
+
+        draw() {
+            ctx.beginPath();
+            ctx.moveTo(this.x, this.y);
+            this.history.forEach((point, index) => {
+                const alpha = index / this.history.length;
+                ctx.lineTo(point.x, point.y);
+                ctx.strokeStyle = `rgba(0, 255, 255, ${alpha})`;
+                ctx.lineWidth = 2;
+            });
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+        }
+    }
+
+    function initParticles() {
+        particlesArray = [];
+        for (let i = 0; i < 150; i++) {
+            const size = Math.random() * 4;
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            const velocityX = (Math.random() - 0.5) * 2;
+            const velocityY = (Math.random() - 0.5) * 2;
+            const color = `rgba(${Math.random() * 255}, ${Math.random() * 255}, 255, 0.7)`;
+            particlesArray.push(new TrailParticle(x, y, size, color, velocityX, velocityY));
+        }
+    }
+
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particlesArray.forEach(particle => particle.update());
+        requestAnimationFrame(animateParticles);
+    }
+
+    initParticles();
+    animateParticles();
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        initParticles();
+    });
+</script>
+{% endblock %}

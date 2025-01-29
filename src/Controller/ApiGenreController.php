@@ -19,7 +19,7 @@ class ApiGenreController extends AbstractController
     /**
      * @Route("/api/genres", name="api_genres", methods={"GET"})
      */
-    public function listGenres(GenreRepository $genreRepository, SerializerInterface $serializer): JsonResponse
+    public function listGenres(GenreRepository $genreRepository, SerializerInterface $serializer)
     {
         $genres = $genreRepository->findAll();
         $resultat = $serializer->serialize(
@@ -29,13 +29,16 @@ class ApiGenreController extends AbstractController
                 'groups' => ['listGenreFull']
             ]
         );
-        return new JsonResponse($resultat, Response::HTTP_OK, [], true);
+        // return new JsonResponse($resultat, Response::HTTP_OK, [], true);
+        return $this->render('api_genre/genre.html.twig', [
+            'controller_name' => 'ApiGenreController','genres' => json_decode($resultat, true)
+        ]);
     }
 
     /**
      * @Route("/genres", name="genres_list", methods={"GET"})
      */
-    public function renderGenres(GenreRepository $genreRepository): Response
+    public function renderGenres(GenreRepository $genreRepository)
     {
         $genres = $genreRepository->findAll();
         return $this->render('api_genre/genre.html.twig', [

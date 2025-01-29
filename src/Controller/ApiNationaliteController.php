@@ -29,7 +29,10 @@ class ApiNationaliteController extends AbstractController
                 'groups' => ['listNationaliteFull']
             ]
         );
-        return new JsonResponse($resultat,200,[],true);
+        // return new JsonResponse($resultat,200,[],true);
+        return $this->render('api_nationalite/nationalite.html.twig', [
+            'controller_name' => 'ApiNationaliteController','nationalites' => json_decode($resultat, true)
+        ]);
     }
 
     /**
@@ -45,7 +48,10 @@ class ApiNationaliteController extends AbstractController
             ]
         );
 
-        return new JsonResponse($resultat, Response::HTTP_OK, [], true);
+        // return new JsonResponse($resultat, Response::HTTP_OK, [], true);
+        return $this->render('api_nationalite/nationalite.html.twig', [
+            'controller_name' => 'ApiNationaliteController','nationalites' => json_decode($resultat, true)
+        ]);
     }
 
     /**

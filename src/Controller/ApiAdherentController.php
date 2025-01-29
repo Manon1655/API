@@ -30,7 +30,10 @@ class ApiAdherentController extends AbstractController
                 'groups' => ['listAdherentFull']
             ]
         );
-        return new JsonResponse($resultat, Response::HTTP_OK, [], true);
+        // return new JsonResponse($resultat, Response::HTTP_OK, [], true);
+        return $this->render('api_adherent/adherent.html.twig', [
+            'controller_name' => 'ApiAdherentController','adherent' => json_decode($resultat, true)
+        ]);
     }
 
     /**

@@ -30,7 +30,10 @@ class ApiLivreController extends AbstractController
                 'groups' => ['listLivreFull']
             ]
         );
-        return new JsonResponse($resultat,200,[],true);
+        // return new JsonResponse($resultat,200,[],true);
+        return $this->render('api_livre/livre.html.twig', [
+            'controller_name' => 'ApiLivreController','livres' => json_decode($resultat, true)
+        ]);
     }
 
     /**

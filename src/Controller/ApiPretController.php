@@ -29,7 +29,10 @@ class ApiPretController extends AbstractController
                 'groups' => ['listPretFull']
             ]
         );
-        return new JsonResponse($resultat,200,[],true);
+        // return new JsonResponse($resultat,200,[],true);
+        return $this->render('api_pret/pret.html.twig', [
+            'controller_name' => 'ApiPretController','prets' => json_decode($resultat, true)
+        ]);
     }
 
     /**
