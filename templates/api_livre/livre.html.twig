@@ -32,7 +32,7 @@
                                 {% if livre.prets is iterable %}
                                     {{ livre.prets|join(', ') }}
                                 {% else %}
-                                    {{ livre.prets|default('') }}
+                                    {{ livre.prets }}
                                 {% endif %}
                             </p>
                         </div>
