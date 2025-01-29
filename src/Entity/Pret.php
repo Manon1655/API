@@ -43,18 +43,8 @@ class Pret
     private $adherent;
 
     /**
-     * @Groups({"listPretFull", "listPretSimple"})
-     */
-    private $nomAdherent;
-
-    /**
-     * @Groups({"listPretFull", "listPretSimple"})
-     */
-    private $prenomAdherent;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Livre::class, inversedBy="prets")
-     * @Groups({"listLivreFull", "listLivreSimple"})
+     * @Groups({"listLivreFull"})
      */
     private $livre;
 
@@ -99,9 +89,20 @@ class Pret
         return $this;
     }
 
-    public function getAdherent(): ?Adherent
+    /**
+     * @Groups({"listPretFull", "listPretSimple"})
+     */
+    public function getAdherent(): ?string
     {
-        return $this->adherent;
+        return $this->adherent ? $this->adherent->getNom() : null;
+    }
+
+    /**
+     * @Groups({"listPretFull", "listPretSimple"})
+     */
+    public function getAdherentPrenom(): ?string
+    {
+        return $this->adherent ? $this->adherent->getPrenom() : null;
     }
 
     public function setAdherent(?Adherent $adherent): self
@@ -119,46 +120,6 @@ class Pret
     public function setLivre(?Livre $livre): self
     {
         $this->livre = $livre;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of nomAdherent
-     */ 
-    public function getNomAdherent()
-    {
-        return $this->nomAdherent;
-    }
-
-    /**
-     * Set the value of nomAdherent
-     *
-     * @return  self
-     */ 
-    public function setNomAdherent($nomAdherent)
-    {
-        $this->nomAdherent = $nomAdherent;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of prenomAdherent
-     */ 
-    public function getPrenomAdherent()
-    {
-        return $this->prenomAdherent;
-    }
-
-    /**
-     * Set the value of prenomAdherent
-     *
-     * @return  self
-     */ 
-    public function setPrenomAdherent($prenomAdherent)
-    {
-        $this->prenomAdherent = $prenomAdherent;
 
         return $this;
     }

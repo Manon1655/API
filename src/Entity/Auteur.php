@@ -93,11 +93,21 @@ class Auteur
     }
 
     /**
-     * @return Collection<int, Livre>
+     * @Groups({"listAuteurFull"})
      */
-    public function getLivres(): Collection
+    public function getLivres(): array
     {
-        return $this->livres;
+        return $this->livres->map(function (Livre $livre) {
+            return $livre->getTitre();
+        })->toArray();
+    }
+
+    /**
+     * @Groups({"listAuteurFull"})
+     */
+    public function getNationalite(): ?string
+    {
+        return $this->nationalite ? $this->nationalite->getLibelle() : null;
     }
 
     public function addLivre(Livre $livre): self
@@ -119,11 +129,6 @@ class Auteur
         }
 
         return $this;
-    }
-
-    public function getNationalite(): ?Nationalite
-    {
-        return $this->nationalite;
     }
 
     public function setNationalite(?Nationalite $nationalite): self

@@ -200,11 +200,13 @@ class Adherent
     }
 
     /**
-     * @return Collection<int, Pret>
+     * @return Collection<int, \DateTimeInterface>
      */
     public function getPrets(): Collection
     {
-        return $this->prets;
+        return $this->prets->map(function (Pret $pret) {
+            return $pret->getDatePret();
+        });
     }
 
     public function addPret(Pret $pret): self
@@ -213,7 +215,6 @@ class Adherent
             $this->prets[] = $pret;
             $pret->setAdherent($this);
         }
-
         return $this;
     }
 

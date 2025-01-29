@@ -164,6 +164,21 @@ class Livre
         return $this;
     }
 
+    public function getGenreName(): ?string
+    {
+        return $this->genre ? $this->genre->getLibelle() : null;
+    }
+
+    public function getEditeurName(): ?string
+    {
+        return $this->editeur ? $this->editeur->getNom() : null;
+    }
+
+    public function getAuteurName(): ?string
+    {
+        return $this->auteur ? $this->auteur->getNom() : null;
+    }
+
     public function getAnnee(): ?int
     {
         return $this->annee;

@@ -69,12 +69,15 @@ class Genre
     }
 
     /**
-     * @return Collection<int, Livre>
+     * @Groups({"listGenreFull"})
      */
-    public function getLivres(): Collection
+    public function getLivres(): array
     {
-        return $this->livres;
+        return $this->livres->map(function (Livre $livre) {
+            return $livre->getTitre();
+        })->toArray();
     }
+
 
     public function addLivre(Livre $livre): self
     {

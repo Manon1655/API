@@ -30,7 +30,7 @@ class Nationalite
 
     /**
      * @ORM\OneToMany(targetEntity=Auteur::class, mappedBy="nationalite")
-     * @Groups({"listNationaliteFull","listNationaliteSimple"})
+     * @Groups({"listNationaliteFull","listNationaliteFull"})
      */
     private $auteurs;
 
@@ -58,10 +58,16 @@ class Nationalite
 
     /**
      * @return Collection<int, Auteur>
+     * @Groups({"listNationaliteFull"})
      */
     public function getAuteurs(): Collection
     {
-        return $this->auteurs;
+        return $this->auteurs->map(function(Auteur $auteur) {
+            return [
+                'nom' => $auteur->getNom(),
+                'prenom' => $auteur->getPrenom()
+            ];
+        });
     }
 
     public function addAuteur(Auteur $auteur): self
