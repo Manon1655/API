@@ -20,7 +20,7 @@ class ApiAdherentController extends AbstractController
     /**
      * @Route("/api/adherents", name="api_adherents", methods={"GET"})
      */
-    public function listAdherents(AdherentRepository $adherentRepository, SerializerInterface $serializer)
+    public function listAdherents(AdherentRepository $adherentRepository, SerializerInterface $serializer): JsonResponse
     {
         $adherents = $adherentRepository->findAll(); 
         $resultat = $serializer->serialize(
@@ -30,16 +30,16 @@ class ApiAdherentController extends AbstractController
                 'groups' => ['listAdherentFull']
             ]
         );
-        // return new JsonResponse($resultat, Response::HTTP_OK, [], true);
-        return $this->render('api_adherent/adherent.html.twig', [
-            'controller_name' => 'ApiAdherentController','adherent' => json_decode($resultat, true)
-        ]);
+        return new JsonResponse($resultat, Response::HTTP_OK, [], true);
+        // return $this->render('api_adherent/adherent.html.twig', [
+        //     'controller_name' => 'ApiAdherentController','adherent' => json_decode($resultat, true)
+        // ]);
     }
 
     /**
      * @Route("/api/adherents/{id}", name="api_adherents_show", methods={"GET"})
      */
-    public function show(Adherent $adherent, SerializerInterface $serializer)
+    public function show(Adherent $adherent, SerializerInterface $serializer): JsonResponse
     {
         $resultat = $serializer->serialize(
             $adherent,
@@ -55,7 +55,7 @@ class ApiAdherentController extends AbstractController
     /**
      * @Route("/api/adherents", name="api_adherents_create", methods={"POST"})
      */
-    public function create(Request $request, PretRepository $repopret, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
+    public function create(Request $request, PretRepository $repopret, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
         $data = $request->getContent();
         $dataTab = json_decode($data, true);
@@ -93,7 +93,7 @@ class ApiAdherentController extends AbstractController
     /**
      * @Route("/api/adherents/{id}", name="api_adherents_update", methods={"PUT"})
      */
-    public function edit(Adherent $adherent, PretRepository $repopret, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
+    public function edit(Adherent $adherent, PretRepository $repopret, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
         $data = $request->getContent();
         $dataTab = json_decode($data, true); 

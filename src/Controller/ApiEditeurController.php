@@ -19,7 +19,7 @@ class ApiEditeurController extends AbstractController
     /**
      * @Route("/api/editeurs", name="api_editeurs", methods={"GET"})
      */
-    public function list(EditeurRepository $repo, SerializerInterface $serializer)
+    public function list(EditeurRepository $repo, SerializerInterface $serializer):JsonResponse
     {
         $editeurs = $repo->findAll();
         $resultat = $serializer->serialize(
@@ -29,16 +29,16 @@ class ApiEditeurController extends AbstractController
                 'groups' => ['listEditeurFull']
             ]
         );
-        // return new JsonResponse($resultat, Response::HTTP_OK, [], true);
-        return $this->render('api_editeur/editeur.html.twig', [
-            'controller_name' => 'ApiEditeurController','editeurs' => json_decode($resultat, true)
-        ]);
+        return new JsonResponse($resultat, Response::HTTP_OK, [], true);
+        // return $this->render('api_editeur/editeur.html.twig', [
+        //     'controller_name' => 'ApiEditeurController','editeurs' => json_decode($resultat, true)
+        // ]);
     }
 
     /**
      * @Route("/api/editeurs/{id}", name="api_editeurs_show", methods={"GET"})
      */
-    public function show(Editeur $editeur, SerializerInterface $serializer)
+    public function show(Editeur $editeur, SerializerInterface $serializer): JsonResponse
     {
         $resultat = $serializer->serialize(
             $editeur,

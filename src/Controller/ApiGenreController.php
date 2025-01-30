@@ -19,7 +19,7 @@ class ApiGenreController extends AbstractController
     /**
      * @Route("/api/genres", name="api_genres", methods={"GET"})
      */
-    public function listGenres(GenreRepository $genreRepository, SerializerInterface $serializer)
+    public function listGenres(GenreRepository $genreRepository, SerializerInterface $serializer): JsonResponse
     {
         $genres = $genreRepository->findAll();
         $resultat = $serializer->serialize(
@@ -29,16 +29,16 @@ class ApiGenreController extends AbstractController
                 'groups' => ['listGenreFull']
             ]
         );
-        // return new JsonResponse($resultat, Response::HTTP_OK, [], true);
-        return $this->render('api_genre/genre.html.twig', [
-            'controller_name' => 'ApiGenreController','genres' => json_decode($resultat, true)
-        ]);
+        return new JsonResponse($resultat, Response::HTTP_OK, [], true);
+        // return $this->render('api_genre/genre.html.twig', [
+        //     'controller_name' => 'ApiGenreController','genres' => json_decode($resultat, true)
+        // ]);
     }
 
     /**
      * @Route("/genres", name="genres_list", methods={"GET"})
      */
-    public function renderGenres(GenreRepository $genreRepository)
+    public function renderGenres(GenreRepository $genreRepository): JsonResponse
     {
         $genres = $genreRepository->findAll();
         return $this->render('api_genre/genre.html.twig', [
@@ -69,7 +69,7 @@ class ApiGenreController extends AbstractController
     /**
      * @Route("/api/genres", name="api_genres_create", methods={"POST"})
      */
-    public function create(Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
+    public function create(Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
         $data=$request->getContent();
         // $genre=new Genre();
@@ -100,7 +100,7 @@ class ApiGenreController extends AbstractController
     /**
      * @Route("/api/genres/{id}", name="api_genres_update", methods={"PUT"})
      */
-    public function edit(Genre $genre,Request $request,EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
+    public function edit(Genre $genre,Request $request,EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
         $data=$request->getContent();
         $serializer->deserialize($data, Genre::class,'json',['object_to_populate'=>$genre]);
@@ -121,7 +121,7 @@ class ApiGenreController extends AbstractController
     /**
      * @Route("/api/genres/{id}", name="api_genres_delete", methods={"DELETE"})
      */
-    public function delete(Genre $genre,EntityManagerInterface $manager)
+    public function delete(Genre $genre,EntityManagerInterface $manager): JsonResponse
     {
         $manager->remove($genre);
         $manager->flush();

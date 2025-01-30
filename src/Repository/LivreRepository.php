@@ -7,6 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * @extends ServiceEntityRepository<Livre>
@@ -47,32 +48,18 @@ class LivreRepository extends ServiceEntityRepository
         }
     }
 
-    // /**
-    //  * @return Livre[] Returns an array of Livre objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Livre[] Returns an array of Livre objects with genre, auteur, and editeur
+     */
+    public function findAllWithRelations(): array
     {
         return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('l.id', 'ASC')
-            ->setMaxResults(10)
+            ->leftJoin('l.genre', 'g')
+            ->leftJoin('l.editeur', 'e')
+            ->leftJoin('l.auteur', 'a')
+            ->addSelect('g', 'e', 'a')
+            ->orderBy('l.titre', 'ASC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Livre
-    {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

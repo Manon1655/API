@@ -21,7 +21,7 @@ class ApiAuteurController extends AbstractController
     /**
      * @Route("/api/auteurs", name="api_auteurs", methods={"GET"})
      */
-    public function list(AuteurRepository $repo, SerializerInterface $serializer)
+    public function list(AuteurRepository $repo, SerializerInterface $serializer): JsonResponse
     {
         $auteurs = $repo->findAll();
         $resultat = $serializer->serialize(
@@ -29,16 +29,16 @@ class ApiAuteurController extends AbstractController
             'json',
             ['groups' => ['listAuteurFull']]
         );
-        // return new JsonResponse($resultat, Response::HTTP_OK, [], true);
-        return $this->render('api_auteur/auteur.html.twig', [
-            'controller_name' => 'ApiAuteurController','auteurs' => json_decode($resultat, true)
-        ]);
+        return new JsonResponse($resultat, Response::HTTP_OK, [], true);
+        // return $this->render('api_auteur/auteur.html.twig', [
+        //     'controller_name' => 'ApiAuteurController','auteurs' => json_decode($resultat, true)
+        // ]);
     }
 
     /**
      * @Route("/api/auteurs/{id}", name="api_auteurs_show", methods={"GET"})
      */
-    public function show(Auteur $auteur, SerializerInterface $serializer)
+    public function show(Auteur $auteur, SerializerInterface $serializer): JsonResponse
     {
         $resultat = $serializer->serialize(
             $auteur,

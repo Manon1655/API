@@ -19,7 +19,7 @@ class ApiPretController extends AbstractController
     /**
      * @Route("/api/prets", name="api_prets", methods={"GET"})
      */
-    public function list(PretRepository $repo, SerializerInterface $serializer)
+    public function list(PretRepository $repo, SerializerInterface $serializer): JsonResponse
     {
         $prets = $repo->findAll();
         $resultat = $serializer->serialize(
@@ -29,16 +29,16 @@ class ApiPretController extends AbstractController
                 'groups' => ['listPretFull']
             ]
         );
-        // return new JsonResponse($resultat,200,[],true);
-        return $this->render('api_pret/pret.html.twig', [
-            'controller_name' => 'ApiPretController','prets' => json_decode($resultat, true)
-        ]);
+        return new JsonResponse($resultat,200,[],true);
+        // return $this->render('api_pret/pret.html.twig', [
+        //     'controller_name' => 'ApiPretController','prets' => json_decode($resultat, true)
+        // ]);
     }
 
     /**
      * @Route("/api/prets/{id}", name="api_prets_show", methods={"GET"})
      */
-    public function show(Pret $pret, SerializerInterface $serializer)
+    public function show(Pret $pret, SerializerInterface $serializer): JsonResponse
     {
         $resultat = $serializer->serialize(
             $pret,
@@ -54,7 +54,7 @@ class ApiPretController extends AbstractController
     /**
      * @Route("/api/prets", name="api_prets_create", methods={"POST"})
      */
-    public function create(Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
+    public function create(Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
         $data=$request->getContent();
         // $pret=new Pret();
@@ -85,7 +85,7 @@ class ApiPretController extends AbstractController
     /**
      * @Route("/api/prets/{id}", name="api_prets_update", methods={"PUT"})
      */
-    public function edit(Pret $pret,Request $request,EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
+    public function edit(Pret $pret,Request $request,EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
         $data=$request->getContent();
         $serializer->deserialize($data, Pret::class,'json',['object_to_populate'=>$pret]);
@@ -106,7 +106,7 @@ class ApiPretController extends AbstractController
     /**
      * @Route("/api/prets/{id}", name="api_prets_delete", methods={"DELETE"})
      */
-    public function delete(Pret $pret,EntityManagerInterface $manager)
+    public function delete(Pret $pret,EntityManagerInterface $manager): JsonResponse
     {
         $manager->remove($pret);
         $manager->flush();

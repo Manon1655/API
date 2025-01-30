@@ -19,7 +19,7 @@ class ApiNationaliteController extends AbstractController
     /**
      * @Route("/api/nationalites", name="api_nationalites", methods={"GET"})
      */
-    public function list(NationaliteRepository $repo, SerializerInterface $serializer)
+    public function list(NationaliteRepository $repo, SerializerInterface $serializer): JsonResponse
     {
         $nationalites = $repo->findAll();
         $resultat = $serializer->serialize(
@@ -29,16 +29,16 @@ class ApiNationaliteController extends AbstractController
                 'groups' => ['listNationaliteFull']
             ]
         );
-        // return new JsonResponse($resultat,200,[],true);
-        return $this->render('api_nationalite/nationalite.html.twig', [
-            'controller_name' => 'ApiNationaliteController','nationalites' => json_decode($resultat, true)
-        ]);
+        return new JsonResponse($resultat,200,[],true);
+        // return $this->render('api_nationalite/nationalite.html.twig', [
+        //     'controller_name' => 'ApiNationaliteController','nationalites' => json_decode($resultat, true)
+        // ]);
     }
 
     /**
      * @Route("/api/nationalites/{id}", name="api_nationalites_show", methods={"GET"})
      */
-    public function show(Nationalite $nationalite, SerializerInterface $serializer)
+    public function show(Nationalite $nationalite, SerializerInterface $serializer): JsonResponse
     {
         $resultat = $serializer->serialize(
             $nationalite,
@@ -57,7 +57,7 @@ class ApiNationaliteController extends AbstractController
     /**
      * @Route("/api/nationalites", name="api_nationalites_create", methods={"POST"})
      */
-    public function create(Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
+    public function create(Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
         $data=$request->getContent();
         // $nationalite=new Nationalite();
@@ -88,7 +88,7 @@ class ApiNationaliteController extends AbstractController
     /**
      * @Route("/api/nationalites/{id}", name="api_nationalites_update", methods={"PUT"})
      */
-    public function edit(Nationalite $nationalite,Request $request,EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
+    public function edit(Nationalite $nationalite,Request $request,EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
         $data=$request->getContent();
         $serializer->deserialize($data, Nationalite::class,'json',['object_to_populate'=>$nationalite]);
@@ -109,7 +109,7 @@ class ApiNationaliteController extends AbstractController
     /**
      * @Route("/api/nationalites/{id}", name="api_nationalites_delete", methods={"DELETE"})
      */
-    public function delete(Nationalite $nationalite,EntityManagerInterface $manager)
+    public function delete(Nationalite $nationalite,EntityManagerInterface $manager): JsonResponse
     {
         $manager->remove($nationalite);
         $manager->flush();

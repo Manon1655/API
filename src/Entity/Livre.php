@@ -128,9 +128,16 @@ class Livre
         return $this;
     }
 
-    public function getGenre(): ?Genre
+    /**
+     * @Groups({"listLivreFull"})
+     */
+    public function getGenre(): array
     {
-        return $this->genre;
+    if ($this->genre === null) {
+        return [];
+    }
+
+    return [$this->genre->getLibelle()];
     }
 
     public function setGenre(?Genre $genre): self
@@ -140,9 +147,16 @@ class Livre
         return $this;
     }
 
-    public function getEditeur(): ?Editeur
+    /**
+     * @Groups({"listLivreFull"})
+     */
+    public function getEditeur(): array
     {
-        return $this->editeur;
+    if ($this->editeur === null) {
+        return [];
+    }
+
+    return [$this->editeur->getNom()];
     }
 
     public function setEditeur(?Editeur $editeur): self
@@ -152,9 +166,16 @@ class Livre
         return $this;
     }
 
-    public function getAuteur(): ?Auteur
+    /**
+     * @Groups({"listLivreFull"})
+     */
+    public function getAuteur(): array
     {
-        return $this->auteur;
+    if ($this->auteur === null) {
+        return [];
+    }
+
+    return [$this->auteur->getNom()];
     }
 
     public function setAuteur(?Auteur $auteur): self
@@ -162,21 +183,6 @@ class Livre
         $this->auteur = $auteur;
 
         return $this;
-    }
-
-    public function getGenreName(): ?string
-    {
-        return $this->genre ? $this->genre->getLibelle() : null;
-    }
-
-    public function getEditeurName(): ?string
-    {
-        return $this->editeur ? $this->editeur->getNom() : null;
-    }
-
-    public function getAuteurName(): ?string
-    {
-        return $this->auteur ? $this->auteur->getNom() : null;
     }
 
     public function getAnnee(): ?int

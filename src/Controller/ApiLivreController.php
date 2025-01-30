@@ -19,7 +19,7 @@ class ApiLivreController extends AbstractController
     /**
      * @Route("/api/livres", name="api_livres", methods={"GET"})
      */
-    public function list(LivreRepository $repo, SerializerInterface $serializer)
+    public function list(LivreRepository $repo, SerializerInterface $serializer): JsonResponse
     {
         $livres = $repo->findAll();
 
@@ -30,16 +30,16 @@ class ApiLivreController extends AbstractController
                 'groups' => ['listLivreFull']
             ]
         );
-        // return new JsonResponse($resultat,200,[],true);
-        return $this->render('api_livre/livre.html.twig', [
-            'controller_name' => 'ApiLivreController','livres' => json_decode($resultat, true)
-        ]);
+        return new JsonResponse($resultat,200,[],true);
+        // return $this->render('api_livre/livre.html.twig', [
+        //     'controller_name' => 'ApiLivreController','livres' => json_decode($resultat, true)
+        // ]);
     }
 
     /**
      * @Route("/api/livres/{id}", name="api_livres_show", methods={"GET"})
      */
-    public function show(Livre $livre, SerializerInterface $serializer)
+    public function show(Livre $livre, SerializerInterface $serializer): JsonResponse
     {
         $resultat = $serializer->serialize(
             $livre,
@@ -55,7 +55,7 @@ class ApiLivreController extends AbstractController
     /**
      * @Route("/api/livres", name="api_livres_create", methods={"POST"})
      */
-    public function create(Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
+    public function create(Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
         $data=$request->getContent();
         // $livre=new Livre();
@@ -86,7 +86,7 @@ class ApiLivreController extends AbstractController
     /**
      * @Route("/api/livres/{id}", name="api_livres_update", methods={"PUT"})
      */
-    public function edit(Livre $livre,Request $request,EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
+    public function edit(Livre $livre,Request $request,EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
         $data=$request->getContent();
         $serializer->deserialize($data, Livre::class,'json',['object_to_populate'=>$livre]);
@@ -107,7 +107,7 @@ class ApiLivreController extends AbstractController
     /**
      * @Route("/api/livres/{id}", name="api_livres_delete", methods={"DELETE"})
      */
-    public function delete(Livre $livre,EntityManagerInterface $manager)
+    public function delete(Livre $livre,EntityManagerInterface $manager): JsonResponse
     {
         $manager->remove($livre);
         $manager->flush();
