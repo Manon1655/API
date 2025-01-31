@@ -2,15 +2,12 @@
 
 namespace App\Entity;
 
-use App\Entity\Pret;
-use App\Entity\Genre;
-use App\Entity\Auteur;
-use App\Entity\Editeur;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\LivreRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use App\Repository\LivreRepository;
 
 /**
  * @ORM\Entity(repositoryClass=LivreRepository::class)
@@ -26,19 +23,32 @@ class Livre
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"listLivreFull","listLivreSimple"})
+     * @ORM\Column(type="string", length=17, unique=true)
+     * @Assert\Isbn(message="L'ISBN doit être un format valide.")
+     * @Groups({"listLivreFull", "listLivreSimple"})
      */
     private $isbn;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"listLivreFull","listLivreSimple"})
+     * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank(message="Le titre du livre ne peut pas être vide.")
+     * @Assert\Length(
+     *      min=2,
+     *      max=100,
+     *      minMessage="Le titre du livre doit contenir au moins 2 caractères.",
+     *      maxMessage="Le titre du livre ne peut pas dépasser 100 caractères."
+     * )
+     * @Groups({"listLivreFull", "listLivreSimple"})
      */
     private $titre;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2)
+     * @Assert\Range(
+     *      min=5,
+     *      max=400,
+     *      notInRangeMessage="Le prix doit être compris entre 5€ et 400€."
+     * )
      * @Groups({"listLivreFull", "listLivreSimple"})
      */
     private $prix;
@@ -65,7 +75,16 @@ class Livre
     private $auteur;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer")
+     * @Assert\Range(
+     *      min=1000,
+     *      max=2100,
+     *      notInRangeMessage="L'année de publication doit être comprise entre 1000 et l'année actuelle."
+     * )
+     * @Assert\LessThanOrEqual(
+     *      value=2025,
+     *      message="L'année de publication ne peut pas dépasser l'année en cours."
+     * )
      * @Groups({"listLivreFull", "listLivreSimple"})
      */
     private $annee;
@@ -100,7 +119,6 @@ class Livre
     public function setIsbn(string $isbn): self
     {
         $this->isbn = $isbn;
-
         return $this;
     }
 
@@ -112,7 +130,6 @@ class Livre
     public function setTitre(string $titre): self
     {
         $this->titre = $titre;
-
         return $this;
     }
 
@@ -124,64 +141,51 @@ class Livre
     public function setPrix(?float $prix): self
     {
         $this->prix = $prix;
-
         return $this;
     }
 
     /**
+     * @return string[]
      * @Groups({"listLivreFull"})
      */
     public function getGenre(): array
     {
-    if ($this->genre === null) {
-        return [];
-    }
-
-    return [$this->genre->getLibelle()];
+        return $this->genre ? [$this->genre->getLibelle()] : [];
     }
 
     public function setGenre(?Genre $genre): self
     {
         $this->genre = $genre;
-
         return $this;
     }
 
     /**
+     * @return string[]
      * @Groups({"listLivreFull"})
      */
     public function getEditeur(): array
     {
-    if ($this->editeur === null) {
-        return [];
-    }
-
-    return [$this->editeur->getNom()];
+        return $this->editeur ? [$this->editeur->getNom()] : [];
     }
 
     public function setEditeur(?Editeur $editeur): self
     {
         $this->editeur = $editeur;
-
         return $this;
     }
 
     /**
+     * @return string[]
      * @Groups({"listLivreFull"})
      */
     public function getAuteur(): array
     {
-    if ($this->auteur === null) {
-        return [];
-    }
-
-    return [$this->auteur->getNom()];
+        return $this->auteur ? [$this->auteur->getNom()] : [];
     }
 
     public function setAuteur(?Auteur $auteur): self
     {
         $this->auteur = $auteur;
-
         return $this;
     }
 
@@ -193,7 +197,6 @@ class Livre
     public function setAnnee(?int $annee): self
     {
         $this->annee = $annee;
-
         return $this;
     }
 
@@ -205,7 +208,6 @@ class Livre
     public function setLangue(?string $langue): self
     {
         $this->langue = $langue;
-
         return $this;
     }
 
@@ -223,19 +225,16 @@ class Livre
             $this->prets[] = $pret;
             $pret->setLivre($this);
         }
-
         return $this;
     }
 
     public function removePret(Pret $pret): self
     {
         if ($this->prets->removeElement($pret)) {
-            // set the owning side to null (unless already changed)
             if ($pret->getLivre() === $this) {
                 $pret->setLivre(null);
             }
         }
-
         return $this;
     }
 }

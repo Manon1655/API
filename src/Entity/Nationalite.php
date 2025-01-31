@@ -2,15 +2,16 @@
 
 namespace App\Entity;
 
-use App\Entity\Auteur;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\NationaliteRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity(repositoryClass=NationaliteRepository::class)
+ * @ORM\Entity()
+ * @UniqueEntity(fields={"libelle"}, message="Le libellé de la nationalité doit être unique.")
  */
 class Nationalite
 {
@@ -18,13 +19,19 @@ class Nationalite
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"listNationaliteFull","listNationaliteSimple"})
+     *  @Groups({"listNationaliteFull","listNationaliteFull"})
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"listNationaliteFull","listNationaliteSimple"})
+     * @ORM\Column(type="string", length=50, unique=true)
+     * @Assert\NotBlank(message="Le libellé de la nationalité ne peut pas être vide.")
+     * @Assert\Length(
+     *      min=4,
+     *      max=50,
+     *      minMessage="Le libellé de la nationalité doit contenir au moins 4 caractères.",
+     *      maxMessage="Le libellé de la nationalité ne peut pas dépasser 50 caractères."
+     * )
      */
     private $libelle;
 
@@ -57,17 +64,17 @@ class Nationalite
     }
 
     /**
-     * @return Collection<int, Auteur>
+     * @return array
      * @Groups({"listNationaliteFull"})
      */
-    public function getAuteurs(): Collection
+    public function getAuteurs(): array
     {
         return $this->auteurs->map(function(Auteur $auteur) {
             return [
                 'nom' => $auteur->getNom(),
                 'prenom' => $auteur->getPrenom()
             ];
-        });
+        })->toArray();
     }
 
     public function addAuteur(Auteur $auteur): self

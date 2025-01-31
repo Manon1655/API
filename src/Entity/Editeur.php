@@ -1,16 +1,15 @@
 <?php
-
 namespace App\Entity;
 
-use App\Entity\Livre;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\EditeurRepository;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity(repositoryClass=EditeurRepository::class)
+ * @ORM\Entity()
+ * @UniqueEntity(fields={"nom"}, message="Le nom de l'éditeur doit être unique.")
  */
 class Editeur
 {
@@ -18,13 +17,20 @@ class Editeur
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"listEditeurFull","listEditeurSimple"})
+     * @Groups({"listEditeurFull","listEditeurSimple",})
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"listEditeurFull","listEditeurSimple"})
+     * @ORM\Column(type="string", length=50, unique=true)
+     * @Assert\NotBlank(message="Le nom de l'éditeur ne peut pas être vide.")
+     * @Assert\Length(
+     *      min=4,
+     *      max=50,
+     *      minMessage="Le nom de l'éditeur doit contenir au moins 4 caractères.",
+     *      maxMessage="Le nom de l'éditeur ne peut pas dépasser 50 caractères."
+     * )
+     * @Groups({"listEditeurFull","listEditeurSimple",})
      */
     private $nom;
 
