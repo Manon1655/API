@@ -14,12 +14,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=AdherentRepository::class)
  * @ApiResource(
- *     normalizationContext={"groups"={"get_role_adherent"}},
- *     collectionOperations={
- *         "get"={
+ *     itemOperations={
+ *         "get_simple"={
  *             "method"="GET",
- *             "path"="/adherents",
- *             "normalization_context"={"groups"={"get_role_adherent"}}
+ *             "path"="/adherents/{id}/simple",
+ *             "normalization_context"={"groups"={"listAdherentSimple"}}
+ *         },
+ *          "get_full"={
+ *             "method"="GET",
+ *             "path"="/adherents/{id}/full",
+ *             "normalization_context"={"groups"={"listAdherentFull"}}
  *         },
  *         "post"={
  *             "method"="POST",
@@ -28,11 +32,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *             "access_control_message"="Vous n'avez pas les droits d'accès.",
  *             "denormalization_context"={"groups"={"post_role_manager"}}
  *         },
- *         "statNbPretsParAdherent"={
- *             "method"="GET",
- *             "route_name"="adherents_nbPrets",
- *              "controller"=StatsController::class
- *         }
  *     },
  *     itemOperations={
  *         "get"={
@@ -42,17 +41,27 @@ use Symfony\Component\Validator\Constraints as Assert;
  *             "access_control_message"="Vous n'avez pas les droits d'accès.",
  *             "normalization_context"={"groups"={"get_role_adherent"}}
  *         },
- *        "put"={
- *            "method"="PUT",
- *            "path"="/adherents/{id}",
- *            "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_ADHERENT') and object == user)",
- *            "access_control_message"="Vous n'avez pas les droits d'accès.",
- *            "normalization_context"={"groups"={"put_role_admin"}}
+ *         "put"={
+ *             "method"="PUT",
+ *             "path"="/adherents/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_ADHERENT') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"put_role_admin"}}
  *         },
- *         "getNbPrets"={
- *             "method"="GET",
- *             "route_name"="adherent_prets_count"
- *         }
+ *         "delete"={
+ *             "method"="DELETE",
+ *             "path"="/adherents/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_ADHERENT') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"delete_role_admin"}}
+ *         },
+ *         "patch"={
+ *             "method"="PATCH",
+ *             "path"="/adherents/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_ADHERENT') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"patch_role_admin"}}
+ *         },
  *     }
  * )
  */
@@ -132,6 +141,7 @@ class Adherent
 
     /**
      * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="adherent")
+     * @Groups({"listAdherentFull"})
      * @Groups({"get_role_adherent"})
      * @ApiSubresource
      */

@@ -35,22 +35,6 @@ class ApiAdherentController extends AbstractController
         //     'controller_name' => 'ApiAdherentController','adherent' => json_decode($resultat, true)
         // ]);
     }
-
-    /**
-     * @Route("/api/adherents/{id}/count", name="adherent_prets_count", methods={"GET"})
-     */
-    public function pret_count(Adherent $adherent): int
-    {
-        return count($adherent->getPrets());
-    }
-
-       /**
-     * @Route("/api/adherents/{id}/nbpret", name="adherents_nbPrets", methods={"GET"})
-     */
-    public function pret_nb(Adherent $adherent): int
-    {
-        return count($adherent->getPrets());
-    }
     /**
      * @Route("/api/adherents/{id}", name="api_adherents_show", methods={"GET"})
      */

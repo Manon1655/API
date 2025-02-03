@@ -14,7 +14,53 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=AuteurRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"listAuteurSimple"}},
+ *     collectionOperations={
+ *         "get"={
+ *             "method"="GET",
+ *             "path"="/auteurs",
+ *             "normalization_context"={"groups"={"get_role_auteur"}}
+ *         },
+ *         "post"={
+ *             "method"="POST",
+ *             "path"="/auteurs/{id}",
+ *             "access_control"="is_granted('ROLE_MANAGER')",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "denormalization_context"={"groups"={"post_role_manager"}}
+ *         },
+ *     },
+ *     itemOperations={
+ *         "get"={
+ *             "method"="GET",
+ *             "path"="/auteurs/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_AUTEUR') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"get_role_auteur"}}
+ *         },
+ *         "put"={
+ *             "method"="PUT",
+ *             "path"="/auteurs/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_AUTEUR') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"put_role_admin"}}
+ *         },
+ *         "delete"={
+ *             "method"="DELETE",
+ *             "path"="/auteurs/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_AUTEUR') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"delete_role_admin"}}
+ *         },
+ *         "patch"={
+ *             "method"="PATCH",
+ *             "path"="/auteurs/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_AUTEUR') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"patch_role_admin"}}
+ *         },
+ *     }
+ * )
  */
 class Auteur
 {
