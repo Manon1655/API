@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Pret;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AdherentRepository;
 use Doctrine\Common\Collections\Collection;

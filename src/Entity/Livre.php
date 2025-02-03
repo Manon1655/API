@@ -2,17 +2,72 @@
 
 namespace App\Entity;
 
+use App\Entity\Pret;
+use App\Entity\Genre;
+use App\Entity\Auteur;
+use App\Entity\Editeur;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\LivreRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=LivreRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ *     itemOperations={
+ *         "get_simple"={
+ *             "method"="GET",
+ *             "path"="/livres/{id}/simple",
+ *             "normalization_context"={"groups"={"listLivreSimple"}}
+ *         },
+ *          "get_full"={
+ *             "method"="GET",
+ *             "path"="/livres/{id}/full",
+ *             "normalization_context"={"groups"={"listLivreFull"}}
+ *         },
+ *         "post"={
+ *             "method"="POST",
+ *             "path"="/livres/{id}",
+ *             "access_control"="is_granted('ROLE_MANAGER')",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "denormalization_context"={"groups"={"post_role_manager"}}
+ *         },
+ *     },
+ *     itemOperations={
+ *         "get"={
+ *             "method"="GET",
+ *             "path"="/livres/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_LIVRE') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"get_role_livre"}}
+ *         },
+ *         "put"={
+ *             "method"="PUT",
+ *             "path"="/livres/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_LIVRE') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"put_role_admin"}}
+ *         },
+ *         "delete"={
+ *             "method"="DELETE",
+ *             "path"="/livres/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_LIVRE') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"delete_role_admin"}}
+ *         },
+ *         "patch"={
+ *             "method"="PATCH",
+ *             "path"="/livres/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_LIVRE') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"patch_role_admin"}}
+ *         },
+ *     }
+ * )
  */
 class Livre
 {
@@ -110,6 +165,7 @@ class Livre
      * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="livre")
      * @Groups({"listPretFull", "listPretSimple"})
      * @Groups({"post_role_manager","put_role_admin"})
+     * @ApiSubresource
      */
     private $prets;
 

@@ -59,7 +59,7 @@ class ApiGenreController extends AbstractController
             $genre,
             'json',
             [
-                'groups' => ['listGenreFull']
+                'groups' => ['listGenreSimple']
             ]
         );
         return new JsonResponse($resultat, Response::HTTP_OK, [], true);

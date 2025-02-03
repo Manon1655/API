@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Livre;
+use App\Entity\Adherent;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PretRepository;
 use ApiPlatform\Core\Annotation\ApiResource;

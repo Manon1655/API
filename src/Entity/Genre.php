@@ -15,10 +15,60 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=GenreRepository::class)
- * @ApiResource()
  * @UniqueEntity(
  *      fields={"libelle"},
  *      message="Il existe déja un genre avec le libellé {{ value }}, veuillez saisir un autre libellé."
+ * )
+ * @ApiResource(
+ *     itemOperations={
+ *         "get_simple"={
+ *             "method"="GET",
+ *             "path"="/genres/{id}/simple",
+ *             "normalization_context"={"groups"={"listGenreSimple"}}
+ *         },
+ *          "get_full"={
+ *             "method"="GET",
+ *             "path"="/genres/{id}/full",
+ *             "normalization_context"={"groups"={"listGenreFull"}}
+ *         },
+ *         "post"={
+ *             "method"="POST",
+ *             "path"="/genres/{id}",
+ *             "access_control"="is_granted('ROLE_MANAGER')",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "denormalization_context"={"groups"={"post_role_manager"}}
+ *         },
+ *     },
+ *     itemOperations={
+ *         "get"={
+ *             "method"="GET",
+ *             "path"="/genres/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_GENRE') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"get_role_genre"}}
+ *         },
+ *         "put"={
+ *             "method"="PUT",
+ *             "path"="/genres/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_GENRE') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"put_role_admin"}}
+ *         },
+ *         "delete"={
+ *             "method"="DELETE",
+ *             "path"="/genres/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_GENRE') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"delete_role_admin"}}
+ *         },
+ *         "patch"={
+ *             "method"="PATCH",
+ *             "path"="/genres/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_GENRE') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"patch_role_admin"}}
+ *         },
+ *     }
  * )
  */
 class Genre
@@ -45,8 +95,7 @@ class Genre
 
     /**
      * @ORM\OneToMany(targetEntity=Livre::class, mappedBy="genre")
-     * @Groups({"listGenreFull"})
-     * @ApiSubresource
+     * @Groups({"listGenreSimple","listGenreFull"})
      */
     private $livres;
 

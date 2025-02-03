@@ -15,12 +15,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=AuteurRepository::class)
  * @ApiResource(
- *     normalizationContext={"groups"={"listAuteurSimple"}},
- *     collectionOperations={
- *         "get"={
+ *     itemOperations={
+ *         "get_simple"={
  *             "method"="GET",
- *             "path"="/auteurs",
- *             "normalization_context"={"groups"={"get_role_auteur"}}
+ *             "path"="/auteurs/{id}/simple",
+ *             "normalization_context"={"groups"={"listAuteurSimple"}}
+ *         },
+ *          "get_full"={
+ *             "method"="GET",
+ *             "path"="/auteurs/{id}/full",
+ *             "normalization_context"={"groups"={"listAuteurFull"}}
  *         },
  *         "post"={
  *             "method"="POST",

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Auteur;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\NationaliteRepository;
 use Doctrine\Common\Collections\Collection;
@@ -14,7 +15,57 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass=NationaliteRepository::class)
  * @UniqueEntity(fields={"libelle"}, message="Le libellé de la nationalité doit être unique.")
- * @ApiResource()
+ * @ApiResource(
+ *     itemOperations={
+ *         "get_simple"={
+ *             "method"="GET",
+ *             "path"="/nationalites/{id}/simple",
+ *             "normalization_context"={"groups"={"listNationaliteSimple"}}
+ *         },
+ *          "get_full"={
+ *             "method"="GET",
+ *             "path"="/nationalites/{id}/full",
+ *             "normalization_context"={"groups"={"listNationaliteFull"}}
+ *         },
+ *         "post"={
+ *             "method"="POST",
+ *             "path"="/nationalites/{id}",
+ *             "access_control"="is_granted('ROLE_MANAGER')",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "denormalization_context"={"groups"={"post_role_manager"}}
+ *         },
+ *     },
+ *     itemOperations={
+ *         "get"={
+ *             "method"="GET",
+ *             "path"="/nationalites/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_NATIONALITE') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"get_role_nationalite"}}
+ *         },
+ *         "put"={
+ *             "method"="PUT",
+ *             "path"="/nationalites/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_NATIONALITE') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"put_role_admin"}}
+ *         },
+ *         "delete"={
+ *             "method"="DELETE",
+ *             "path"="/nationalites/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_NATIONALITE') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"delete_role_admin"}}
+ *         },
+ *         "patch"={
+ *             "method"="PATCH",
+ *             "path"="/nationalites/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_NATIONALITE') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"patch_role_admin"}}
+ *         },
+ *     }
+ * )
  */
 class Nationalite
 {
