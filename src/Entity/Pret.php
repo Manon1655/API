@@ -3,10 +3,13 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PretRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PretRepository::class)
+ * @ApiResource()
  */
 class Pret
 {
@@ -15,36 +18,42 @@ class Pret
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"listPretFull", "listPretSimple"})
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="date")
      * @Groups({"listPretFull", "listPretSimple"})
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $datePret;
 
     /**
      * @ORM\Column(type="date")
      * @Groups({"listPretFull", "listPretSimple"})
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $dateRetourPrevue;
 
     /**
      * @ORM\Column(type="date")
      * @Groups({"listPretFull", "listPretSimple"})
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $dateRetourReelle;
 
     /**
      * @ORM\ManyToOne(targetEntity=Adherent::class, inversedBy="prets")
      * @Groups({"listPretFull", "listPretSimple"})
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $adherent;
 
     /**
      * @ORM\ManyToOne(targetEntity=Livre::class, inversedBy="prets")
      * @Groups({"listLivreFull"})
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $livre;
 

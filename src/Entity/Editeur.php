@@ -2,13 +2,16 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\EditeurRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass=EditeurRepository::class)
+ * @ApiResource()
  * @UniqueEntity(fields={"nom"}, message="Le nom de l'éditeur doit être unique.")
  */
 class Editeur
@@ -18,6 +21,7 @@ class Editeur
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"listEditeurFull","listEditeurSimple",})
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $id;
 
@@ -31,12 +35,14 @@ class Editeur
      *      maxMessage="Le nom de l'éditeur ne peut pas dépasser 50 caractères."
      * )
      * @Groups({"listEditeurFull","listEditeurSimple",})
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $nom;
 
     /**
      * @ORM\OneToMany(targetEntity=Livre::class, mappedBy="editeur")
      * @Groups({"listEditeurFull","listEditeurSimple",})
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $livres;
 

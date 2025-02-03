@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Editeur;
+use App\Repository\LivreRepository;
 use App\Repository\EditeurRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,9 +20,9 @@ class ApiEditeurController extends AbstractController
     /**
      * @Route("/api/editeurs", name="api_editeurs", methods={"GET"})
      */
-    public function list(EditeurRepository $repo, SerializerInterface $serializer):JsonResponse
+    public function listEditeur(EditeurRepository $EditeurRepository, SerializerInterface $serializer):JsonResponse
     {
-        $editeurs = $repo->findAll();
+        $editeurs = $EditeurRepository->findAll();
         $resultat = $serializer->serialize(
             $editeurs,
             'json',
@@ -54,23 +55,29 @@ class ApiEditeurController extends AbstractController
     /**
      * @Route("/api/editeurs", name="api_editeurs_create", methods={"POST"})
      */
-    public function create(Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
+    public function create(Request $request, LivreRepository $repolivre, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
         $data = $request->getContent();
         $dataTab = json_decode($data, true);
         $editeur = $serializer->deserialize($data, Editeur::class, 'json');
-
+        
+        if (isset($dataTab['livre']['id'])) {
+            $livre = $repolivre->find($dataTab['livre']['id']);
+            if (!$livre) {
+                return new JsonResponse("Prêt invalide ou introuvable", Response::HTTP_BAD_REQUEST);
+            }
+            $editeur->addlivre($livre); 
+        }
         $errors = $validator->validate($editeur);
         if (count($errors)) {
             $errorsJson = $serializer->serialize($errors, 'json');
             return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST, [], true);
         }
-
         $manager->persist($editeur);
         $manager->flush();
-
+        
         return new JsonResponse(
-            "L'éditeur a bien été créé", 
+            "Le livre a bien été créé",
             Response::HTTP_CREATED,
             [
                 "location" => $this->generateUrl(

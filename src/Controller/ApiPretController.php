@@ -100,7 +100,7 @@ class ApiPretController extends AbstractController
         $manager->persist($pret);
         $manager->flush();
 
-        return new JsonResponse("la pret a bien été modifié",Response::HTTP_OK,[],true); 
+        return new JsonResponse("le pret a bien été modifié",Response::HTTP_OK,[],true); 
     }
 
     /**
@@ -111,6 +111,6 @@ class ApiPretController extends AbstractController
         $manager->remove($pret);
         $manager->flush();
 
-        return new JsonResponse("La pret a bien été supprimé", Response::HTTP_OK, []);
+        return new JsonResponse("Le pret a bien été supprimé", Response::HTTP_OK, []);
     }
 }

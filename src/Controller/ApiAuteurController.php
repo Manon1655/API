@@ -89,7 +89,8 @@ class ApiAuteurController extends AbstractController
     /**
      * @Route("/api/auteurs/{id}", name="api_auteurs_update", methods={"PUT"})
      */
-    public function edit(Auteur $auteur, NationaliteRepository $repoNation, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse {
+    public function edit(Auteur $auteur, NationaliteRepository $repoNation, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse 
+    {
         $data = $request->getContent();
         $dataTab = json_decode($data, true);
         $serializer->deserialize($data, Auteur::class, 'json', ['object_to_populate' => $auteur]);

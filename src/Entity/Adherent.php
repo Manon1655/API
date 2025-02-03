@@ -2,15 +2,59 @@
 
 namespace App\Entity;
 
-use App\Entity\Pret;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\AdherentRepository;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=AdherentRepository::class)
+ * @ApiResource(
+ *     normalizationContext={"groups"={"get_role_adherent"}},
+ *     collectionOperations={
+ *         "get"={
+ *             "method"="GET",
+ *             "path"="/adherents",
+ *             "normalization_context"={"groups"={"get_role_adherent"}}
+ *         },
+ *         "post"={
+ *             "method"="POST",
+ *             "path"="/adherents/{id}",
+ *             "access_control"="is_granted('ROLE_MANAGER')",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "denormalization_context"={"groups"={"post_role_manager"}}
+ *         },
+ *         "statNbPretsParAdherent"={
+ *             "method"="GET",
+ *             "route_name"="adherents_nbPrets",
+ *              "controller"=StatsController::class
+ *         }
+ *     },
+ *     itemOperations={
+ *         "get"={
+ *             "method"="GET",
+ *             "path"="/adherents/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_ADHERENT') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"get_role_adherent"}}
+ *         },
+ *        "put"={
+ *            "method"="PUT",
+ *            "path"="/adherents/{id}",
+ *            "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_ADHERENT') and object == user)",
+ *            "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *            "normalization_context"={"groups"={"put_role_admin"}}
+ *         },
+ *         "getNbPrets"={
+ *             "method"="GET",
+ *             "route_name"="adherent_prets_count"
+ *         }
+ *     }
+ * )
  */
 class Adherent
 {
@@ -26,10 +70,8 @@ class Adherent
      * @ORM\Column(type="string", length=255)
      * @Groups({"listAdherentFull", "listAdherentSimple"})
      * @Assert\NotBlank(message="Le nom est obligatoire.")
-     * @Assert\Length(
-     *    max=255,
-     *    maxMessage="Le nom ne doit pas dépasser {{ limit }} caractères."
-     * )
+     * @Assert\Length(max=255, maxMessage="Le nom ne doit pas dépasser {{ limit }} caractères.")
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $nom;
 
@@ -37,10 +79,8 @@ class Adherent
      * @ORM\Column(type="string", length=255)
      * @Groups({"listAdherentFull", "listAdherentSimple"})
      * @Assert\NotBlank(message="Le prénom est obligatoire.")
-     * @Assert\Length(
-     *    max=255,
-     *    maxMessage="Le prénom ne doit pas dépasser {{ limit }} caractères."
-     * )
+     * @Assert\Length(max=255, maxMessage="Le prénom ne doit pas dépasser {{ limit }} caractères.")
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $prenom;
 
@@ -48,10 +88,8 @@ class Adherent
      * @ORM\Column(type="string", length=255)
      * @Groups({"listAdherentFull", "listAdherentSimple"})
      * @Assert\NotBlank(message="L'adresse est obligatoire.")
-     * @Assert\Length(
-     *    max=255,
-     *    maxMessage="L'adresse ne doit pas dépasser {{ limit }} caractères."
-     * )
+     * @Assert\Length(max=255, maxMessage="L'adresse ne doit pas dépasser {{ limit }} caractères.")
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $adresse;
 
@@ -59,10 +97,8 @@ class Adherent
      * @ORM\Column(type="integer")
      * @Groups({"listAdherentFull", "listAdherentSimple"})
      * @Assert\NotBlank(message="Le code postal est obligatoire.")
-     * @Assert\Length(
-     *    min=5,
-     *    minMessage="Le code postal doit contenir {{ limit }} caractères."
-     * )
+     * @Assert\Length(min=5, minMessage="Le code postal doit contenir {{ limit }} caractères.")
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $codePostal;
 
@@ -70,10 +106,8 @@ class Adherent
      * @ORM\Column(type="string", length=255)
      * @Groups({"listAdherentFull", "listAdherentSimple"})
      * @Assert\NotBlank(message="La ville est obligatoire.")
-     * @Assert\Length(
-     *    max=255,
-     *    maxMessage="La ville ne doit pas dépasser {{ limit }} caractères."
-     * )
+     * @Assert\Length(max=255, maxMessage="La ville ne doit pas dépasser {{ limit }} caractères.")
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $ville;
 
@@ -81,10 +115,8 @@ class Adherent
      * @ORM\Column(type="string", length=255)
      * @Groups({"listAdherentFull", "listAdherentSimple"})
      * @Assert\NotBlank(message="Le téléphone est obligatoire.")
-     * @Assert\Length(
-     *    max=255,
-     *    maxMessage="Le téléphone ne doit pas dépasser {{ limit }} caractères."
-     * )
+     * @Assert\Length(max=255, maxMessage="Le téléphone ne doit pas dépasser {{ limit }} caractères.")
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $telephone;
 
@@ -92,16 +124,16 @@ class Adherent
      * @ORM\Column(type="string", length=255)
      * @Groups({"listAdherentFull", "listAdherentSimple"})
      * @Assert\NotBlank(message="L'email est obligatoire.")
-     * @Assert\Length(
-     *    max=255,
-     *    maxMessage="L'email ne doit pas dépasser {{ limit }} caractères."
-     * )
+     * @Assert\Email(message="L'email '{{ value }}' n'est pas valide.")
+     * @Assert\Length(max=255, maxMessage="L'email ne doit pas dépasser {{ limit }} caractères.")
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $mail;
 
     /**
      * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="adherent")
-     * @Groups({"listAdherentFull", "listAdherentSimple"})
+     * @Groups({"get_role_adherent"})
+     * @ApiSubresource
      */
     private $prets;
 
@@ -123,7 +155,6 @@ class Adherent
     public function setNom(string $nom): self
     {
         $this->nom = $nom;
-
         return $this;
     }
 
@@ -135,7 +166,6 @@ class Adherent
     public function setPrenom(string $prenom): self
     {
         $this->prenom = $prenom;
-
         return $this;
     }
 
@@ -147,7 +177,6 @@ class Adherent
     public function setAdresse(string $adresse): self
     {
         $this->adresse = $adresse;
-
         return $this;
     }
 
@@ -159,7 +188,6 @@ class Adherent
     public function setCodePostal(int $codePostal): self
     {
         $this->codePostal = $codePostal;
-
         return $this;
     }
 
@@ -171,7 +199,6 @@ class Adherent
     public function setVille(string $ville): self
     {
         $this->ville = $ville;
-
         return $this;
     }
 
@@ -183,7 +210,6 @@ class Adherent
     public function setTelephone(string $telephone): self
     {
         $this->telephone = $telephone;
-
         return $this;
     }
 
@@ -195,18 +221,15 @@ class Adherent
     public function setMail(string $mail): self
     {
         $this->mail = $mail;
-
         return $this;
     }
 
     /**
-     * @return Collection<int, \DateTimeInterface>
+     * @return Collection<int, Pret>
      */
     public function getPrets(): Collection
     {
-        return $this->prets->map(function (Pret $pret) {
-            return $pret->getDatePret();
-        });
+        return $this->prets;
     }
 
     public function addPret(Pret $pret): self
@@ -221,12 +244,10 @@ class Adherent
     public function removePret(Pret $pret): self
     {
         if ($this->prets->removeElement($pret)) {
-            // set the owning side to null (unless already changed)
             if ($pret->getAdherent() === $this) {
                 $pret->setAdherent(null);
             }
         }
-
         return $this;
     }
 }

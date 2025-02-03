@@ -7,12 +7,14 @@ use App\Entity\Nationalite;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AuteurRepository;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=AuteurRepository::class)
+ * @ApiResource()
  */
 class Auteur
 {
@@ -21,6 +23,7 @@ class Auteur
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"listAuteurFull", "listAuteurSimple"})
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $id;
 
@@ -32,6 +35,7 @@ class Auteur
      *     max=255,
      *     maxMessage="Le nom ne doit pas dépasser {{ limit }} caractères."
      * )
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $nom;
 
@@ -43,18 +47,21 @@ class Auteur
      *     max=255,
      *     maxMessage="Le prénom ne doit pas dépasser {{ limit }} caractères."
      * )
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $prenom;
 
     /**
      * @ORM\OneToMany(targetEntity=Livre::class, mappedBy="auteur")
      * @Groups({"listAuteurFull", "listAuteurSimple"})
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $livres;
 
     /**
      * @ORM\ManyToOne(targetEntity=Nationalite::class, inversedBy="auteurs")
      * @Groups({"listAuteurFull", "listAuteurSimple"})
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $nationalite;
 

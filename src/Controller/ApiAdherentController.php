@@ -37,6 +37,21 @@ class ApiAdherentController extends AbstractController
     }
 
     /**
+     * @Route("/api/adherents/{id}/count", name="adherent_prets_count", methods={"GET"})
+     */
+    public function pret_count(Adherent $adherent): int
+    {
+        return count($adherent->getPrets());
+    }
+
+       /**
+     * @Route("/api/adherents/{id}/nbpret", name="adherents_nbPrets", methods={"GET"})
+     */
+    public function pret_nb(Adherent $adherent): int
+    {
+        return count($adherent->getPrets());
+    }
+    /**
      * @Route("/api/adherents/{id}", name="api_adherents_show", methods={"GET"})
      */
     public function show(Adherent $adherent, SerializerInterface $serializer): JsonResponse
@@ -93,16 +108,11 @@ class ApiAdherentController extends AbstractController
     /**
      * @Route("/api/adherents/{id}", name="api_adherents_update", methods={"PUT"})
      */
-    public function edit(Adherent $adherent, PretRepository $repopret, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
+    public function edit(Adherent $adherent, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
         $data = $request->getContent();
-        $dataTab = json_decode($data, true); 
         $serializer->deserialize($data, Adherent::class, 'json', ['object_to_populate' => $adherent]);
         
-        if (isset($dataTab['pret']['id'])) {
-            $adherent = $repopret->find($dataTab['pret']['id']);
-            $adherent->setAdherent($adherent);
-        }
         $errors = $validator->validate($adherent);
         if (count($errors)) {
             $errorsJson = $serializer->serialize($errors, 'json');
@@ -122,6 +132,6 @@ class ApiAdherentController extends AbstractController
         $manager->remove($adherent);
         $manager->flush();
 
-        return new JsonResponse("L'adhérent a bien été supprimé", Response::HTTP_OK);
+        return new JsonResponse("L'adhérent a bien été supprimé", Response::HTTP_OK, []);
     }
 }

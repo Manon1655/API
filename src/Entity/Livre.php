@@ -3,14 +3,16 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\LivreRepository;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Repository\LivreRepository;
 
 /**
  * @ORM\Entity(repositoryClass=LivreRepository::class)
+ * @ApiResource()
  */
 class Livre
 {
@@ -19,6 +21,7 @@ class Livre
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"listLivreFull", "listLivreSimple"})
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $id;
 
@@ -26,6 +29,7 @@ class Livre
      * @ORM\Column(type="string", length=17, unique=true)
      * @Assert\Isbn(message="L'ISBN doit être un format valide.")
      * @Groups({"listLivreFull", "listLivreSimple"})
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $isbn;
 
@@ -39,6 +43,7 @@ class Livre
      *      maxMessage="Le titre du livre ne peut pas dépasser 100 caractères."
      * )
      * @Groups({"listLivreFull", "listLivreSimple"})
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $titre;
 
@@ -50,6 +55,7 @@ class Livre
      *      notInRangeMessage="Le prix doit être compris entre 5€ et 400€."
      * )
      * @Groups({"listLivreFull", "listLivreSimple"})
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $prix;
 
@@ -57,6 +63,7 @@ class Livre
      * @ORM\ManyToOne(targetEntity=Genre::class, inversedBy="livres")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"listLivreFull", "listLivreSimple"})
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $genre;
 
@@ -64,6 +71,7 @@ class Livre
      * @ORM\ManyToOne(targetEntity=Editeur::class, inversedBy="livres")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"listLivreFull", "listLivreSimple"})
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $editeur;
 
@@ -71,6 +79,7 @@ class Livre
      * @ORM\ManyToOne(targetEntity=Auteur::class, inversedBy="livres")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"listLivreFull", "listLivreSimple"})
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $auteur;
 
@@ -86,18 +95,21 @@ class Livre
      *      message="L'année de publication ne peut pas dépasser l'année en cours."
      * )
      * @Groups({"listLivreFull", "listLivreSimple"})
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $annee;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"listLivreFull", "listLivreSimple"})
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $langue;
 
     /**
      * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="livre")
      * @Groups({"listPretFull", "listPretSimple"})
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $prets;
 
