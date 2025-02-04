@@ -53,8 +53,8 @@ class AppFixtures extends Fixture
                      ->setPrenom($this->faker->firstName($genre[mt_rand(0, 1)]))
                      ->setAdresse($this->faker->streetAddress())
                      ->setTelephone($this->faker->phoneNumber())
-                    ->setCodePostal(intval($this->faker->postcode())) 
-                    ->setVille($this->faker->city())
+                     ->setCodePostal(intval($this->faker->postcode())) 
+                     ->setVille($this->faker->city())
                      ->setCodeCommune($commune[mt_rand(0, sizeof($commune) - 1)])
                      ->setMail(strtolower($adherent->getNom()) . '@gmail.com')
                      ->setPassword($this->passwordEncoder->encodePassword($adherent, $adherent->getNom())); 
@@ -95,7 +95,7 @@ class AppFixtures extends Fixture
 
                 if(mt_rand(1,3)==1)
                 {
-                    $pret->setDateRetourReelle($this->faker->dateTimeInInterval($pret->getDatePret(),'+ 30 days'));
+                    $pret->setDateRetourReelle($this->faker->dateTimeBetween($pret->getDatePret(),'+ 30 days'));
                 }
                 $this->manager->persist($pret); 
             }
