@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -66,7 +67,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     }
  * )
  */
-class Adherent
+class Adherent implements UserInterface
 {
     /**
      * @ORM\Id
@@ -95,9 +96,8 @@ class Adherent
     private $prenom;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"listAdherentFull", "listAdherentSimple"})
-     * @Assert\NotBlank(message="L'adresse est obligatoire.")
      * @Assert\Length(max=255, maxMessage="L'adresse ne doit pas dépasser {{ limit }} caractères.")
      * @Groups({"post_role_manager","put_role_admin"})
      */
@@ -139,6 +139,16 @@ class Adherent
      * @Groups({"post_role_manager","put_role_admin"})
      */
     private $mail;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $codeCommune;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $password;
 
     /**
      * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="adherent")
@@ -235,6 +245,30 @@ class Adherent
         return $this;
     }
 
+    public function getCodeCommune(): ?string
+    {
+        return $this->codeCommune;
+    }
+
+    public function setCodeCommune(?string $codeCommune): self
+    {
+        $this->codeCommune = $codeCommune;
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Pret>
      */
@@ -261,4 +295,44 @@ class Adherent
         }
         return $this;
     }
+
+    /**
+     * Returns the roles granted to the user.
+     *
+     *     public function getRoles()
+     *     {
+     *         return ['ROLE_USER'];
+     *     }
+     *
+     * Alternatively, the roles might be stored in a ``roles`` property,
+     * and populated in any number of different ways when the user object
+     * is created.
+     *
+     * @return array<Role|string> The user roles
+     */
+    public function getRoles(){
+        return ['ROLE_USER'];
+    }
+
+    /**
+     * Returns the salt that was originally used to encode the password.
+     *
+     * This can return null if the password was not encoded using a salt.
+     *
+     * @return string|null The salt
+     */
+    public function getSalt(){
+        return null;
+    }
+
+    /**
+     * Returns the username used to authenticate the user.
+     *
+     * @return string The username
+     */
+    public function getUsername(){
+        return $this->getMail();
+    }
+
+    public function eraseCredentials(){}
 }

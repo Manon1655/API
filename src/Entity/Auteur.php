@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AuteurRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -109,9 +110,10 @@ class Auteur
     private $livres;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Nationalite::class, inversedBy="auteurs")
-     * @Groups({"listAuteurFull", "listAuteurSimple"})
-     * @Groups({"post_role_manager","put_role_admin"})
+     * @ORM\ManyToOne(targetEntity=Nationalite::class)
+     * @ORM\JoinColumn(name="nationalite_id", referencedColumnName="id")
+     * @Groups({"listAuteurFull"})
+     * @ApiSubresource(normalizationContext={"groups"={"nationalite_libelle"}})
      */
     private $nationalite;
 

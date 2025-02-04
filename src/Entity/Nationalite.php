@@ -73,8 +73,8 @@ class Nationalite
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     *  @Groups({"listNationaliteFull","listNationaliteFull"})
-     * @Groups({"post_role_manager","put_role_admin"})
+     * @Groups({"listNationaliteFull","listNationaliteFull"})
+     * @Groups({"nationalite_libelle"})
      */
     private $id;
 
@@ -87,7 +87,7 @@ class Nationalite
      *      minMessage="Le libellé de la nationalité doit contenir au moins 4 caractères.",
      *      maxMessage="Le libellé de la nationalité ne peut pas dépasser 50 caractères."
      * )
-     * @Groups({"post_role_manager","put_role_admin"})
+     * @Groups({"post_role_manager", "put_role_admin", "nationalite_libelle"})
      * @Groups({"listAuteurFull"})
      */
     private $libelle;
