@@ -22,17 +22,46 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "order"={"titre"="ASC"}  
  *      },
  *      collectionOperations={
- *          "get_role_adherent"={
+ *          "get"={
  *              "method"="GET",
- *              "path"="/adherent/livres",
+ *              "path"="/livres",
  *              "normalization_context"={
  *                  "groups"={"get_role_adherent"}
  *              }
- *          }
- *      }
+ *          },
+ *          "post"={
+ *             "method"="POST",
+ *             "path"="/genres/{id}",
+ *             "security"="is_granted('ROLE_MANAGER')",
+ *             "security_message"="Vous n'avez pas les droits d'accéder à cette ressource"
+ *         }
+ *      },
+ *     itemOperations={
+ *         "get"={
+ *             "method"="GET",
+ *             "path"="/livres/{id}",
+ *             "normalization_context"={
+ *                  "groups"={"get_role_adherent"}
+ *             }
+ *         },
+ *         "put"={
+ *             "method"="PUT",
+ *             "path"="/livres/{id}",
+ *             "security"="is_granted('ROLE_MANAGER')",
+ *             "security_message"="Vous n'avez pas les droits d'accéder à cette ressource",
+ *             "denormalization_context"={
+ *                  "groups"={"put_manager"}
+ *             }
+ *         },
+ *         "delete"={
+ *             "method"="DELETE",
+ *             "path"="/livres/{id}",
+ *             "security"="is_granted('ROLE_ADMIN')",
+ *             "security_message"="Vous n'avez pas les droits d'accéder à cette ressource"
+ *         }
+ *     }
  * )
  */
-
 class Livre
 {
     /**
@@ -48,7 +77,7 @@ class Livre
      * @ORM\Column(type="string", length=17, unique=true)
      * @Assert\Isbn(message="L'ISBN doit être un format valide.")
      * @Groups({"listLivreFull", "listLivreSimple"})
-     * @Groups({"get_role_adherent"})
+     * @Groups({"get_role_adherent","put_manager"})
      */
     private $isbn;
 
@@ -62,7 +91,7 @@ class Livre
      *      maxMessage="Le titre du livre ne peut pas dépasser 100 caractères."
      * )
      * @Groups({"listAuteurFull","listEditeurFull","listGenreFull"})
-     * @Groups({"get_role_adherent"})
+     * @Groups({"get_role_adherent","put_manager"})
      */
     private $titre;
 
@@ -74,6 +103,7 @@ class Livre
      *      notInRangeMessage="Le prix doit être compris entre 5€ et 400€."
      * )
      * @Groups({"listLivreFull", "listLivreSimple"})
+     * @Groups({"get_role_manager","put_admin"})
      */
     private $prix;
 
@@ -81,7 +111,7 @@ class Livre
      * @ORM\ManyToOne(targetEntity=Genre::class, inversedBy="livres")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"listLivreFull", "listLivreSimple"})
-     * @Groups({"get_role_adherent"})
+     * @Groups({"get_role_adherent","put_manager"})
      */
     private $genre;
 
@@ -89,7 +119,7 @@ class Livre
      * @ORM\ManyToOne(targetEntity=Editeur::class, inversedBy="livres")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"listLivreFull", "listLivreSimple"})
-     * @Groups({"get_role_adherent"})
+     * @Groups({"get_role_adherent","put_manager"})
      */
     private $editeur;
 
@@ -97,7 +127,7 @@ class Livre
      * @ORM\ManyToOne(targetEntity=Auteur::class, inversedBy="livres")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"listLivreFull", "listLivreSimple"})
-     * @Groups({"get_role_adherent"})
+     * @Groups({"get_role_adherent","put_manager"})
      */
     private $auteur;
 
@@ -113,14 +143,14 @@ class Livre
      *      message="L'année de publication ne peut pas dépasser l'année en cours."
      * )
      * @Groups({"listLivreFull", "listLivreSimple"})
-     * @Groups({"get_role_adherent"})
+     * @Groups({"get_role_adherent","put_manager"})
      */
     private $annee;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"listLivreFull", "listLivreSimple"})
-     * @Groups({"get_role_adherent"})
+     * @Groups({"get_role_adherent","put_manager"})
      */
     private $langue;
 
@@ -128,6 +158,7 @@ class Livre
      * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="livre")
      * @Groups({"listPretFull", "listPretSimple"})
      * @ApiSubresource
+     * @Groups({"get_role_manager"})
      */
     private $prets;
 
