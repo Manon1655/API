@@ -57,7 +57,7 @@ class AppFixtures extends Fixture
                      ->setVille($this->faker->city())
                      ->setCodeCommune($commune[mt_rand(0, sizeof($commune) - 1)])
                      ->setMail(strtolower($adherent->getNom()) . '@gmail.com')
-                     ->setPassword($this->passwordEncoder->encodePassword($adherent, $adherent->getNom())); 
+                     ->setPassword($this->passwordEncoder->encodePassword($adherent, $adherent->getNom()));
             $this->addReference("adherent0" . $i, $adherent);
             $this->manager->persist($adherent);
         }
@@ -79,8 +79,7 @@ class AppFixtures extends Fixture
                     ->setPassword($this->passwordEncoder->encodePassword($adherentManager, "Tulipe"))
                     ->setRoles($rolesManager);
         $this->manager->persist($adherentManager);
-
-
+        
         $this->manager->flush();
     }
 
