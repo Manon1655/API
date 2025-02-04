@@ -334,5 +334,7 @@ class Adherent implements UserInterface
         return $this->getMail();
     }
 
-    public function eraseCredentials(){}
+    public function eraseCredentials(){
+        
+    }
 }
