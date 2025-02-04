@@ -18,57 +18,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=LivreRepository::class)
  * @ApiResource(
- *     itemOperations={
- *         "get_simple"={
- *             "method"="GET",
- *             "path"="/livres/{id}/simple",
- *             "normalization_context"={"groups"={"listLivreSimple"}}
- *         },
- *          "get_full"={
- *             "method"="GET",
- *             "path"="/livres/{id}/full",
- *             "normalization_context"={"groups"={"listLivreFull"}}
- *         },
- *         "post"={
- *             "method"="POST",
- *             "path"="/livres/{id}",
- *             "access_control"="is_granted('ROLE_MANAGER')",
- *             "access_control_message"="Vous n'avez pas les droits d'accès.",
- *             "denormalization_context"={"groups"={"post_role_manager"}}
- *         },
- *     },
- *     itemOperations={
- *         "get"={
- *             "method"="GET",
- *             "path"="/livres/{id}",
- *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_LIVRE') and object == user)",
- *             "access_control_message"="Vous n'avez pas les droits d'accès.",
- *             "normalization_context"={"groups"={"get_role_livre"}}
- *         },
- *         "put"={
- *             "method"="PUT",
- *             "path"="/livres/{id}",
- *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_LIVRE') and object == user)",
- *             "access_control_message"="Vous n'avez pas les droits d'accès.",
- *             "normalization_context"={"groups"={"put_role_admin"}}
- *         },
- *         "delete"={
- *             "method"="DELETE",
- *             "path"="/livres/{id}",
- *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_LIVRE') and object == user)",
- *             "access_control_message"="Vous n'avez pas les droits d'accès.",
- *             "normalization_context"={"groups"={"delete_role_admin"}}
- *         },
- *         "patch"={
- *             "method"="PATCH",
- *             "path"="/livres/{id}",
- *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_LIVRE') and object == user)",
- *             "access_control_message"="Vous n'avez pas les droits d'accès.",
- *             "normalization_context"={"groups"={"patch_role_admin"}}
- *         },
- *     }
+ *      attributes={
+ *          "order"={"titre"="ASC"}  
+ *      },
+ *      collectionOperations={
+ *          "get_role_adherent"={
+ *              "method"="GET",
+ *              "path"="/adherent/livres",
+ *              "normalization_context"={
+ *                  "groups"={"get_role_adherent"}
+ *              }
+ *          }
+ *      }
  * )
  */
+
 class Livre
 {
     /**
@@ -84,7 +48,7 @@ class Livre
      * @ORM\Column(type="string", length=17, unique=true)
      * @Assert\Isbn(message="L'ISBN doit être un format valide.")
      * @Groups({"listLivreFull", "listLivreSimple"})
-     * @Groups({"post_role_manager","put_role_admin"})
+     * @Groups({"get_role_adherent"})
      */
     private $isbn;
 
@@ -98,7 +62,7 @@ class Livre
      *      maxMessage="Le titre du livre ne peut pas dépasser 100 caractères."
      * )
      * @Groups({"listAuteurFull","listEditeurFull","listGenreFull"})
-     * @Groups({"post_role_manager","put_role_admin"})
+     * @Groups({"get_role_adherent"})
      */
     private $titre;
 
@@ -110,7 +74,6 @@ class Livre
      *      notInRangeMessage="Le prix doit être compris entre 5€ et 400€."
      * )
      * @Groups({"listLivreFull", "listLivreSimple"})
-     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $prix;
 
@@ -118,7 +81,7 @@ class Livre
      * @ORM\ManyToOne(targetEntity=Genre::class, inversedBy="livres")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"listLivreFull", "listLivreSimple"})
-     * @Groups({"post_role_manager","put_role_admin"})
+     * @Groups({"get_role_adherent"})
      */
     private $genre;
 
@@ -126,7 +89,7 @@ class Livre
      * @ORM\ManyToOne(targetEntity=Editeur::class, inversedBy="livres")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"listLivreFull", "listLivreSimple"})
-     * @Groups({"post_role_manager","put_role_admin"})
+     * @Groups({"get_role_adherent"})
      */
     private $editeur;
 
@@ -134,7 +97,7 @@ class Livre
      * @ORM\ManyToOne(targetEntity=Auteur::class, inversedBy="livres")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"listLivreFull", "listLivreSimple"})
-     * @Groups({"post_role_manager","put_role_admin"})
+     * @Groups({"get_role_adherent"})
      */
     private $auteur;
 
@@ -150,21 +113,20 @@ class Livre
      *      message="L'année de publication ne peut pas dépasser l'année en cours."
      * )
      * @Groups({"listLivreFull", "listLivreSimple"})
-     * @Groups({"post_role_manager","put_role_admin"})
+     * @Groups({"get_role_adherent"})
      */
     private $annee;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"listLivreFull", "listLivreSimple"})
-     * @Groups({"post_role_manager","put_role_admin"})
+     * @Groups({"get_role_adherent"})
      */
     private $langue;
 
     /**
      * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="livre")
      * @Groups({"listPretFull", "listPretSimple"})
-     * @Groups({"post_role_manager","put_role_admin"})
      * @ApiSubresource
      */
     private $prets;

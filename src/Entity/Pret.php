@@ -39,7 +39,7 @@ class Pret
     private $dateRetourPrevue;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      * @Groups({"listPretFull", "listPretSimple"})
      * @Groups({"post_role_manager","put_role_admin"})
      */
