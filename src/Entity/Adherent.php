@@ -78,7 +78,7 @@ class Adherent
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"listAdherentFull", "listAdherentSimple"})
+     * @Groups({"listPretFull", "listPretSimple"})
      * @Assert\NotBlank(message="Le nom est obligatoire.")
      * @Assert\Length(max=255, maxMessage="Le nom ne doit pas dépasser {{ limit }} caractères.")
      * @Groups({"post_role_manager","put_role_admin"})
@@ -87,7 +87,7 @@ class Adherent
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"listAdherentFull", "listAdherentSimple"})
+     * @Groups({"listPretFull", "listPretSimple"})
      * @Assert\NotBlank(message="Le prénom est obligatoire.")
      * @Assert\Length(max=255, maxMessage="Le prénom ne doit pas dépasser {{ limit }} caractères.")
      * @Groups({"post_role_manager","put_role_admin"})

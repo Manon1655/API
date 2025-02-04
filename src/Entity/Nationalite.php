@@ -88,6 +88,7 @@ class Nationalite
      *      maxMessage="Le libellé de la nationalité ne peut pas dépasser 50 caractères."
      * )
      * @Groups({"post_role_manager","put_role_admin"})
+     * @Groups({"listAuteurFull"})
      */
     private $libelle;
 
@@ -124,14 +125,9 @@ class Nationalite
      * @return array
      * @Groups({"listNationaliteFull"})
      */
-    public function getAuteurs(): array
+    public function getAuteurs(): Collection
     {
-        return $this->auteurs->map(function(Auteur $auteur) {
-            return [
-                'nom' => $auteur->getNom(),
-                'prenom' => $auteur->getPrenom()
-            ];
-        })->toArray();
+        return $this->auteurs;
     }
 
     public function addAuteur(Auteur $auteur): self

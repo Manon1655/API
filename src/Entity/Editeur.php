@@ -4,6 +4,7 @@ namespace App\Entity;
 use App\Entity\Livre;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\EditeurRepository;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -85,7 +86,7 @@ class Editeur
      *      minMessage="Le nom de l'éditeur doit contenir au moins 4 caractères.",
      *      maxMessage="Le nom de l'éditeur ne peut pas dépasser 50 caractères."
      * )
-     * @Groups({"listEditeurFull","listEditeurSimple",})
+     * @Groups({"listLivreFull"})
      * @Groups({"post_role_manager","put_role_admin"})
      */
     private $nom;
@@ -122,11 +123,9 @@ class Editeur
     /**
      * @Groups({"listEditeurFull"})
      */
-    public function getLivres(): array
+    public function getLivres(): Collection
     {
-        return $this->livres->map(function (Livre $livre) {
-            return $livre->getTitre();
-        })->toArray();
+        return $this->livres;
     }
 
     public function addLivre(Livre $livre): self

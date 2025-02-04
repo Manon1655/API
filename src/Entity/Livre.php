@@ -97,7 +97,7 @@ class Livre
      *      minMessage="Le titre du livre doit contenir au moins 2 caractères.",
      *      maxMessage="Le titre du livre ne peut pas dépasser 100 caractères."
      * )
-     * @Groups({"listLivreFull", "listLivreSimple"})
+     * @Groups({"listAuteurFull","listEditeurFull","listGenreFull"})
      * @Groups({"post_role_manager","put_role_admin"})
      */
     private $titre;
@@ -213,13 +213,13 @@ class Livre
     }
 
     /**
-     * @return string[]
-     * @Groups({"listLivreFull"})
-     */
-    public function getGenre(): array
+    * @Groups({"listLivreFull"})
+    */
+    public function getGenre(): ?Genre
     {
-        return $this->genre ? [$this->genre->getLibelle()] : [];
+        return $this->genre;
     }
+
 
     public function setGenre(?Genre $genre): self
     {
@@ -228,13 +228,13 @@ class Livre
     }
 
     /**
-     * @return string[]
-     * @Groups({"listLivreFull"})
-     */
-    public function getEditeur(): array
+    * @Groups({"listLivreFull"})
+    */
+    public function getEditeur(): ?Editeur
     {
-        return $this->editeur ? [$this->editeur->getNom()] : [];
+        return $this->editeur;
     }
+
 
     public function setEditeur(?Editeur $editeur): self
     {
@@ -243,13 +243,13 @@ class Livre
     }
 
     /**
-     * @return string[]
-     * @Groups({"listLivreFull"})
-     */
-    public function getAuteur(): array
+    * @Groups({"listLivreFull"})
+    */
+    public function getAuteur(): ?Auteur
     {
-        return $this->auteur ? [$this->auteur->getNom()] : [];
+        return $this->auteur;
     }
+
 
     public function setAuteur(?Auteur $auteur): self
     {

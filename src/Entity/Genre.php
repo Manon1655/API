@@ -8,7 +8,6 @@ use App\Repository\GenreRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -83,7 +82,7 @@ class Genre
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"listGenreSimple","listGenreFull"})
+     * @Groups({"listLivreFull"})
      * @Assert\Length(
      *      min=2,
      *      max=50,
@@ -98,11 +97,6 @@ class Genre
      * @Groups({"listGenreSimple","listGenreFull"})
      */
     private $livres;
-
-    public function __construct()
-    {
-        $this->livres = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -124,11 +118,9 @@ class Genre
     /**
      * @Groups({"listGenreFull"})
      */
-    public function getLivres(): array
+    public function getLivres(): Collection
     {
-        return $this->livres->map(function (Livre $livre) {
-            return $livre->getTitre();
-        })->toArray();
+        return $this->livres;
     }
 
 

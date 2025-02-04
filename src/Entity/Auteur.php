@@ -79,7 +79,7 @@ class Auteur
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"listAuteurFull", "listAuteurSimple"})
+     * @Groups({"listLivreFull"})
      * @Assert\NotBlank(message="Le nom est obligatoire.")
      * @Assert\Length(
      *     max=255,
@@ -91,7 +91,7 @@ class Auteur
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"listAuteurFull", "listAuteurSimple"})
+     * @Groups({"listAuteurFull","listNationaliteFull"})
      * @Assert\NotBlank(message="Le prénom est obligatoire.")
      * @Assert\Length(
      *     max=255,
@@ -152,20 +152,18 @@ class Auteur
     /**
      * @Groups({"listAuteurFull"})
      */
-    public function getLivres(): array
+    public function getLivres(): Collection
     {
-        return $this->livres->map(function (Livre $livre) {
-            return $livre->getTitre();
-        })->toArray();
+        return $this->livres;
     }
 
     /**
      * @Groups({"listAuteurFull"})
      */
-    public function getNationalite(): ?string
+    public function getNationalite(): ?Nationalite
     {
-        return $this->nationalite ? $this->nationalite->getLibelle() : null;
-    }
+        return $this->nationalite;
+    }    
 
     public function addLivre(Livre $livre): self
     {

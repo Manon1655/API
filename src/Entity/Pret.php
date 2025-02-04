@@ -7,6 +7,7 @@ use App\Entity\Adherent;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PretRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -103,9 +104,9 @@ class Pret
     /**
      * @Groups({"listPretFull", "listPretSimple"})
      */
-    public function getAdherent(): ?string
+    public function getAdherent(): ?Adherent
     {
-        return $this->adherent ? $this->adherent->getNom() : null;
+        return $this->adherent;
     }
 
     /**
