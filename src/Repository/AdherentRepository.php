@@ -24,6 +24,24 @@ class AdherentRepository extends ServiceEntityRepository
     }
 
     /**
+     * 
+     * 
+     *
+     * @param Adherent $entity
+     * @param boolean $flush
+     * @return void
+     */
+    public function nbPretsParAdherent()
+    {
+        $query = $this->createQueryBuilder('a')
+            ->select('a.id,a.nom,a.prenom, count(p.id) as nbPrets')
+            ->join('a.prets', 'p')
+            ->groupBy('a')
+            ->orderBy('nbPrets', 'DESC');
+        return $query->getQuery()->getResult();
+    }
+    
+    /**
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -46,33 +64,4 @@ class AdherentRepository extends ServiceEntityRepository
             $this->_em->flush();
         }
     }
-
-    // /**
-    //  * @return Adherent[] Returns an array of Adherent objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Adherent
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

@@ -32,8 +32,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  *             "path"="/adherents/{id}",
  *             "access_control"="is_granted('ROLE_MANAGER')",
  *             "access_control_message"="Vous n'avez pas les droits d'accès.",
- *             "denormalization_context"={"groups"={"post_role_manager"}}
- *         },
+ *             "denormalization_context"={"groups"={"post_role_manager"}
+ *         }
+ *     },
+ *         "StatNbPretsParAdherent"={
+ *              "method"="GET",
+ *              "route_name"="adherents_nbPrets",
+ *              "controller"=StatsController::class
+ *          }
  *     },
  *     itemOperations={
  *         "get"={
@@ -41,8 +47,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  *             "path"="/adherents/{id}",
  *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_ADHERENT') and object == user)",
  *             "access_control_message"="Vous n'avez pas les droits d'accès.",
- *             "normalization_context"={"groups"={"get_role_adherent"}}
- *         },
+ *             "normalization_context"={"groups"={"get_role_adherent"}
+ *          }
+ *     },
+ *          "getNbPrets"={
+ *              "method"="GET",
+ *              "route_name"="adherent_prets_count"
+ *      },
  *         "put"={
  *             "method"="PUT",
  *             "path"="/adherents/{id}",

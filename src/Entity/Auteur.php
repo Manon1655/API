@@ -73,46 +73,39 @@ class Auteur
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"listAuteurFull", "listAuteurSimple"})
-     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"listLivreFull"})
+     * @Groups({"get"})
      * @Assert\NotBlank(message="Le nom est obligatoire.")
      * @Assert\Length(
      *     max=255,
      *     maxMessage="Le nom ne doit pas dépasser {{ limit }} caractères."
      * )
-     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"listAuteurFull","listNationaliteFull"})
+     * @Groups({"get"})
      * @Assert\NotBlank(message="Le prénom est obligatoire.")
      * @Assert\Length(
      *     max=255,
      *     maxMessage="Le prénom ne doit pas dépasser {{ limit }} caractères."
      * )
-     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $prenom;
 
     /**
      * @ORM\OneToMany(targetEntity=Livre::class, mappedBy="auteur")
-     * @Groups({"listAuteurFull", "listAuteurSimple"})
-     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $livres;
 
     /**
      * @ORM\ManyToOne(targetEntity=Nationalite::class)
      * @ORM\JoinColumn(name="nationalite_id", referencedColumnName="id")
-     * @Groups({"listAuteurFull"})
      * @ApiSubresource(normalizationContext={"groups"={"nationalite_libelle"}})
      */
     private $nationalite;
@@ -186,6 +179,33 @@ class Auteur
         }
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return (string)$this->nom . " " . $this->prenom;
+    }
+
+    /**
+     * Retourne le nombre de livres de l'auteur
+     * @Groups({"get"})
+     * @return integer
+     */
+    public function getNbLivres() : int
+    {
+        return $this->livres->count();
+    }
+
+    /**
+     * Retourne le nombre de livres disponibles de cet auteur
+     * @Groups({"get"})
+     * @return integer
+     */
+    public function getNbLivresDispo() : int
+    {
+        return array_reduce($this->livres->toArray(), function($nb, $livre){
+            return $nb + ($livre->getDispo() === true ? 1: 0);
+        }, 0);
     }
 
     public function setNationalite(?Nationalite $nationalite): self

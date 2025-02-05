@@ -31,8 +31,18 @@ class PretSubscriber implements EventSubscriberInterface
         $entity = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
         $adherent = $this->token->getToken()->getUser();
-        if ($entity instanceof Pret && $method == Request::METHOD_POST){
-            $entity->setAdherent($adherent);
+        if ($entity instanceof Pret){
+            if($method == Request::METHOD_POST) {
+                $entity->setAdherent($adherent);
+            }elseif ($method == Request::METHOD_PUT){
+                if($entity->getDateRetourReelle() == null){
+                    $entity->getLivre()->setDispo(false);
+                }else{
+                    $entity->getLivre()->setDispo(true);
+                }
+            }elseif ($method == Request::METHOD_DELETE){
+                $entity->getLivre()->setDispo(true);
+            }
         }
         return;
     }

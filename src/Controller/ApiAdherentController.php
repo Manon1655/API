@@ -18,6 +18,27 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ApiAdherentController extends AbstractController
 {
     /**
+     * renvoie le nombre de prets pour un adherent
+     * @Route(
+     *      path="apiPlatform/adherent/{id}/pret/count",
+     *      name="adherent_pret_count",
+     *      methods={"GET"},
+     *      defaults={
+     *          "_controller"="\app\controller\ApiAdherentController::nombrePrets",
+     *          "_api_resource_class"="App\Entity\Adherent",
+     *          "_api_item_operation_name"="getNbPrets"
+     *      }
+     * )
+     */
+    public function nombrePrets(Adherent $data)
+    {
+        $count = $data->getPrets()->count();
+        return $this->json([
+            "id" => $data->getId(),
+            "nombre_prets" => $count
+        ]);
+    }
+    /**
      * @Route("/api/adherents", name="api_adherents", methods={"GET"})
      */
     public function listAdherents(AdherentRepository $adherentRepository, SerializerInterface $serializer): JsonResponse
@@ -34,6 +55,22 @@ class ApiAdherentController extends AbstractController
         // return $this->render('api_adherent/adherent.html.twig', [
         //     'controller_name' => 'ApiAdherentController','adherent' => json_decode($resultat, true)
         // ]);
+    }
+
+    /**
+     * @Route("/api/adherents/{id}/count", name="adherent_prets_count", methods={"GET"})
+     */
+    public function pret_count(Adherent $adherent): int
+    {
+        return count($adherent->getPrets());
+    }
+
+       /**
+     * @Route("/api/adherents/{id}/nbpret", name="adherents_nbPrets", methods={"GET"})
+     */
+    public function pret_nb(Adherent $adherent): int
+    {
+        return count($adherent->getPrets());
     }
     /**
      * @Route("/api/adherents/{id}", name="api_adherents_show", methods={"GET"})

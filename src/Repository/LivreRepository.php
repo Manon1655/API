@@ -25,6 +25,20 @@ class LivreRepository extends ServiceEntityRepository
     }
 
     /**
+     * Retorune les 5 livres les plus prisés
+     */
+    public function TrouveMeilleursLivres()
+    {
+        $query = $this->createQueryBuilder('l')
+            ->select('l as livre, count(p.id) as nbprets')
+            ->join('l.prets', 'p')
+            ->groupBy('l')
+            ->orderBy('nbprets', 'DESC')
+            ->setMaxResults(5);
+        return $query->getQuery()->getResult();
+    }
+
+    /**
      * @throws ORMException
      * @throws OptimisticLockException
      */

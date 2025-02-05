@@ -34,7 +34,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  *             "path"="/genres/{id}",
  *             "security"="is_granted('ROLE_MANAGER')",
  *             "security_message"="Vous n'avez pas les droits d'accéder à cette ressource"
- *         }
+ *      },
+ *          "meilleurslivres"={
+ *              "method"="GET",
+ *              "route_name"="meilleurslivres",
+ *              "controller"=StatsController::class
+ *          }
  *      },
  *     itemOperations={
  *         "get"={
@@ -161,6 +166,11 @@ class Livre
      * @Groups({"get_role_manager"})
      */
     private $prets;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $dispo;
 
     public function __construct()
     {
@@ -296,6 +306,18 @@ class Livre
                 $pret->setLivre(null);
             }
         }
+        return $this;
+    }
+
+    public function getDispo(): ?bool
+    {
+        return $this->dispo;
+    }
+
+    public function setDispo(?bool $dispo): self
+    {
+        $this->dispo = $dispo;
+
         return $this;
     }
 }
