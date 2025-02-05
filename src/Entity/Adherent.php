@@ -9,9 +9,9 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=AdherentRepository::class)
@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *             "path"="/adherents/{id}/simple",
  *             "normalization_context"={"groups"={"listAdherentSimple"}}
  *         },
- *          "get_full"={
+ *         "get_full"={
  *             "method"="GET",
  *             "path"="/adherents/{id}/full",
  *             "normalization_context"={"groups"={"listAdherentFull"}}
@@ -30,8 +30,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *         "post"={
  *             "method"="POST",
  *             "path"="/adherents/{id}",
- *             "access_control"="is_granted('ROLE_MANAGER')",
- *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "security"="is_granted('ROLE_MANAGER')",
+ *             "security_message"="Vous n'avez pas les droits d'accès.",
  *             "denormalization_context"={"groups"={"post_role_manager"}
  *         }
  *     },
@@ -45,8 +45,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *         "get"={
  *             "method"="GET",
  *             "path"="/adherents/{id}",
- *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_ADHERENT') and object == user)",
- *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "security"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_ADHERENT') and object == user)",
+ *             "security_message"="Vous n'avez pas les droits d'accès.",
  *             "normalization_context"={"groups"={"get_role_adherent"}
  *          }
  *     },
@@ -57,22 +57,22 @@ use Symfony\Component\Validator\Constraints as Assert;
  *         "put"={
  *             "method"="PUT",
  *             "path"="/adherents/{id}",
- *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_ADHERENT') and object == user)",
- *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "security"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_ADHERENT') and object == user)",
+ *             "security_message"="Vous n'avez pas les droits d'accès.",
  *             "normalization_context"={"groups"={"put_role_admin"}}
  *         },
  *         "delete"={
  *             "method"="DELETE",
  *             "path"="/adherents/{id}",
- *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_ADHERENT') and object == user)",
- *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "security"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_ADHERENT') and object == user)",
+ *             "security_message"="Vous n'avez pas les droits d'accès.",
  *             "normalization_context"={"groups"={"delete_role_admin"}}
  *         },
  *         "patch"={
  *             "method"="PATCH",
  *             "path"="/adherents/{id}",
- *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_ADHERENT') and object == user)",
- *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "security"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_ADHERENT') and object == user)",
+ *             "security_message"="Vous n'avez pas les droits d'accès.",
  *             "normalization_context"={"groups"={"patch_role_admin"}}
  *         },
  *     }
@@ -122,7 +122,8 @@ class Adherent implements UserInterface
      * @ORM\Column(type="integer")
      * @Groups({"listAdherentFull", "listAdherentSimple"})
      * @Assert\NotBlank(message="Le code postal est obligatoire.")
-     * @Assert\Length(min=5, minMessage="Le code postal doit contenir {{ limit }} caractères.")
+     * @Assert\Length(min=5, max=5, exactMessage="Le code postal doit contenir {{ limit }} caractères.")
+     * @Assert\Regex(pattern="/^\d{5}$/", message="Le code postal doit être composé de 5 chiffres.")
      * @Groups({"post_role_manager","put_role_admin"})
      */
     private $codePostal;
@@ -131,7 +132,7 @@ class Adherent implements UserInterface
      * @ORM\Column(type="string", length=255)
      * @Groups({"listAdherentFull", "listAdherentSimple"})
      * @Assert\NotBlank(message="La ville est obligatoire.")
-     * @Assert\Length(max=255, maxMessage="La ville ne doit pas dépasser {{ limit }} caractères.")
+     * @Assert\Length(min=2, max=100, minMessage="La ville doit contenir au moins {{ limit }} caractères.", maxMessage="La ville ne doit pas dépasser {{ limit }} caractères.")
      * @Groups({"post_role_manager","put_role_admin"})
      */
     private $ville;
@@ -139,8 +140,7 @@ class Adherent implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"listAdherentFull", "listAdherentSimple"})
-     * @Assert\NotBlank(message="Le téléphone est obligatoire.")
-     * @Assert\Length(max=255, maxMessage="Le téléphone ne doit pas dépasser {{ limit }} caractères.")
+     * @Assert\Regex(pattern="/^\d{10}$/", message="Le téléphone doit comporter 10 chiffres.")
      * @Groups({"post_role_manager","put_role_admin"})
      */
     private $telephone;
@@ -162,13 +162,16 @@ class Adherent implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"post_role_manager","put_role_admin"})
      */
     private $password;
 
     /**
-     * @ORM\Column(type="array", length=255, nullable=true)
+     * @ORM\Column(type="json", length=255, nullable=true)
+     * [Assert\NotBlank]
+     * @Groups({"get_role_adherent","get_role_manager","post_role_admin","put_role_admin"})
      */
-    private $roles;
+    private ?array $roles = [];
 
     /**
      * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="adherent")
@@ -318,34 +321,20 @@ class Adherent implements UserInterface
         return $this;
     }
 
-    /**
-     * Returns the roles granted to the user.
-     *
-     *     public function getRoles()
-     *     {
-     *         return ['ROLE_USER'];
-     *     }
-     *
-     * Alternatively, the roles might be stored in a ``roles`` property,
-     * and populated in any number of different ways when the user object
-     * is created.
-     *
-     * @return array<Role|string> The user roles
-     */
+   
     public function getRoles(): array
     {
-        return $this->roles;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
     }
 
-    /**
-     * affecte les rôles de l'utilisateur 
-     *
-     * @param array $roles
-     * @return self
-     */
     public function setRoles(array $roles): self
     {
-        $this->roles=$roles;
+        $this->roles = $roles;
+
         return $this;
     }
 

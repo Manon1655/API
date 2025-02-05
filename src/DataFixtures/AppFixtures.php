@@ -66,6 +66,11 @@ class AppFixtures extends Fixture
         $rolesAdmin[]=ADHERENT::ROLE_ADMIN;
         $adherentAdmin   ->setNom("Luciole")
                     ->setPrenom("Fleur")
+                    ->setAdresse($this->faker->streetAddress())
+                    ->setTelephone($this->faker->phoneNumber())
+                    ->setCodePostal(intval($this->faker->postcode())) 
+                    ->setVille($this->faker->city())
+                    ->setCodeCommune($commune[mt_rand(0, sizeof($commune) - 1)])
                     ->setMail("admin@gmail.com")
                     ->setPassword($this->passwordEncoder->encodePassword($adherentAdmin, "Luciole"))
                     ->setRoles($rolesAdmin);
@@ -75,6 +80,11 @@ class AppFixtures extends Fixture
         $rolesManager[]=ADHERENT::ROLE_MANAGER;
         $adherentManager   ->setNom("Tulipe")
                     ->setPrenom("Terre")
+                    ->setAdresse($this->faker->streetAddress())
+                    ->setTelephone($this->faker->phoneNumber())
+                    ->setCodePostal(intval($this->faker->postcode())) 
+                    ->setVille($this->faker->city())
+                    ->setCodeCommune($commune[mt_rand(0, sizeof($commune) - 1)])
                     ->setMail("manager@gmail.com")
                     ->setPassword($this->passwordEncoder->encodePassword($adherentManager, "Tulipe"))
                     ->setRoles($rolesManager);

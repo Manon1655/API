@@ -9,6 +9,7 @@ use App\Repository\PretRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=PretRepository::class)
@@ -17,12 +18,57 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "get"={
  *              "method"="GET",
  *              "path"="/prets/{id}",
- *              "security"="(is_granted('ROLE_ADHERENT') and object.getAdherent() == user) or is_granted('ROLE_MANAGER')",
+ *              "security"="(is_granted('ROLE_PRET') and object.getPret() == user) or is_granted('ROLE_MANAGER')",
  *              "security_message"="Vous ne pouvez avoir accès qu'à vos propres prêts."
  *           }
  *      }
  * )
  * @HasLifecycleCallbacks()
+ *  },
+ *          "get_full"={
+ *             "method"="GET",
+ *             "path"="/prets/{id}/full",
+ *             "normalization_context"={"groups"={"listPretFull"}}
+ *         },
+ *         "post"={
+ *             "method"="POST",
+ *             "path"="/prets/{id}",
+ *             "access_control"="is_granted('ROLE_MANAGER')",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "denormalization_context"={"groups"={"post_role_manager"}}
+ *         },
+ *     },
+ *     itemOperations={
+ *         "get"={
+ *             "method"="GET",
+ *             "path"="/prets/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_PRET') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"get_role_pret"}}
+ *         },
+ *         "put"={
+ *             "method"="PUT",
+ *             "path"="/prets/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_PRET') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"put_role_admin"}}
+ *         },
+ *         "delete"={
+ *             "method"="DELETE",
+ *             "path"="/prets/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_PRET') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"delete_role_admin"}}
+ *         },
+ *         "patch"={
+ *             "method"="PATCH",
+ *             "path"="/prets/{id}",
+ *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_PRET') and object == user)",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"patch_role_admin"}}
+ *         },
+ *     }
+ * )
  */
 class Pret
 {
@@ -39,6 +85,11 @@ class Pret
      * @ORM\Column(type="date")
      * @Groups({"listPretFull", "listPretSimple"})
      * @Groups({"post_role_manager","put_role_admin"})
+     * @Assert\NotBlank(message="La date de prêt est obligatoire.")
+     * @Assert\GreaterThanOrEqual(
+     *     "today",
+     *     message="La date de prêt ne peut pas être antérieure à aujourd'hui."
+     * )
      */
     private $datePret;
 
@@ -46,6 +97,11 @@ class Pret
      * @ORM\Column(type="date")
      * @Groups({"listPretFull", "listPretSimple"})
      * @Groups({"post_role_manager","put_role_admin"})
+     * @Assert\NotBlank(message="La date de retour prévue est obligatoire.")
+     * @Assert\GreaterThan(
+     *     propertyPath="datePret",
+     *     message="La date de retour prévue doit être postérieure à la date de prêt."
+     * )
      */
     private $dateRetourPrevue;
 
@@ -53,6 +109,10 @@ class Pret
      * @ORM\Column(type="date", nullable=true)
      * @Groups({"listPretFull", "listPretSimple"})
      * @Groups({"post_role_manager","put_role_admin"})
+     * @Assert\GreaterThan(
+     *     propertyPath="datePret",
+     *     message="La date de retour réelle doit être postérieure à la date de prêt."
+     * )
      */
     private $dateRetourReelle;
 
@@ -155,14 +215,14 @@ class Pret
         return $this;
     }
 
-    // /**
-    //  * @ORM\PrePersist
-    //  *
-    //  * @return void
-    //  */
-    // public function RendIndDispoLivre()
-    // {
-    //     $this->getLivre()->setDispo(false);
-    // }
+    /**
+     * @ORM\PrePersist
+     *
+     * @return void
+     */
+    public function RendIndDispoLivre()
+    {
+        $this->getLivre()->setDispo(false);
+    }
         
 }

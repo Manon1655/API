@@ -85,18 +85,16 @@ class ApiPretController extends AbstractController
     /**
      * @Route("/api/prets/{id}", name="api_prets_update", methods={"PUT"})
      */
-    public function edit(Pret $pret,Request $request,EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
+    public function edit(Pret $pret, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
         $data=$request->getContent();
         $serializer->deserialize($data, Pret::class,'json',['object_to_populate'=>$pret]);
 
-        // gestion des erreurs de validation 
         $errors=$validator->validate($pret);
         if(count($errors)){
-            $errorsJson=$serializer->serialize($errors,'json');
+            $errorsJson = $serializer->serialize($errors,'json');
             return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST,[],true);
         }
-
         $manager->persist($pret);
         $manager->flush();
 
@@ -106,7 +104,7 @@ class ApiPretController extends AbstractController
     /**
      * @Route("/api/prets/{id}", name="api_prets_delete", methods={"DELETE"})
      */
-    public function delete(Pret $pret,EntityManagerInterface $manager): JsonResponse
+    public function delete(Pret $pret, EntityManagerInterface $manager): JsonResponse
     {
         $manager->remove($pret);
         $manager->flush();

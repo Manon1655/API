@@ -1,4 +1,4 @@
 apiPlatform_login_check:
     path: /apiPlatform/login_check
-    controller: App\Controller\AuthenticationController::loginCheck
+    controller: App\Controller\AuthenticationController
 
