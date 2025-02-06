@@ -206,11 +206,6 @@ class Pret
         return $this->adherent;
     }  
 
-    public function getAdherentPrenom(): ?string
-    {
-        return $this->adherent ? $this->adherent->getPrenom() : null;
-    }
-
     public function setAdherent(?Adherent $adherent): self
     {
         $this->adherent = $adherent;
