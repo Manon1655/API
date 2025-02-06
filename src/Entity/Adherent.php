@@ -184,7 +184,7 @@ class Adherent implements UserInterface
     public function __construct()
     {
         $this->prets = new ArrayCollection();
-        $leRole[]=[ self::DEFAULT_ROLE];
+        $leRole[]=self::DEFAULT_ROLE;
         $this->roles= $leRole;
     }
 

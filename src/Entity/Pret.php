@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=PretRepository::class)
  * @ApiResource(
- *      itemOperations={
+ *      collectionOperations={
  *          "get"={
  *              "method"="GET",
  *              "path"="/prets/{id}",
@@ -23,7 +23,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *           }
  *      }
  * )
- * @HasLifecycleCallbacks()
  *  },
  *          "get_full"={
  *             "method"="GET",
@@ -33,42 +32,48 @@ use Symfony\Component\Validator\Constraints as Assert;
  *         "post"={
  *             "method"="POST",
  *             "path"="/prets/{id}",
- *             "access_control"="is_granted('ROLE_MANAGER')",
- *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "security"="is_granted('ROLE_MANAGER')",
+ *             "security_message"="Vous n'avez pas les droits d'accès.",
  *             "denormalization_context"={"groups"={"post_role_manager"}}
- *         },
+ *         }
  *     },
  *     itemOperations={
  *         "get"={
  *             "method"="GET",
  *             "path"="/prets/{id}",
- *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_PRET') and object == user)",
- *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "security"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_PRET') and object == user)",
+ *             "security_message"="Vous ne pouvez avoir accès qu'à vos propres prêts.",
  *             "normalization_context"={"groups"={"get_role_pret"}}
+ *         },
+ *         "get_full"={
+ *             "method"="GET",
+ *             "path"="/prets/{id}/full",
+ *             "normalization_context"={"groups"={"listPretFull"}}
  *         },
  *         "put"={
  *             "method"="PUT",
  *             "path"="/prets/{id}",
- *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_PRET') and object == user)",
- *             "access_control_message"="Vous n'avez pas les droits d'accès.",
- *             "normalization_context"={"groups"={"put_role_admin"}}
- *         },
- *         "delete"={
- *             "method"="DELETE",
- *             "path"="/prets/{id}",
- *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_PRET') and object == user)",
- *             "access_control_message"="Vous n'avez pas les droits d'accès.",
- *             "normalization_context"={"groups"={"delete_role_admin"}}
+ *             "security"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_PRET') and object == user)",
+ *             "security_message"="Vous n'avez pas les droits d'accès.",
+ *             "denormalization_context"={"groups"={"put_role_admin"}}
  *         },
  *         "patch"={
  *             "method"="PATCH",
  *             "path"="/prets/{id}",
- *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_PRET') and object == user)",
- *             "access_control_message"="Vous n'avez pas les droits d'accès.",
- *             "normalization_context"={"groups"={"patch_role_admin"}}
+ *             "security"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_PRET') and object == user)",
+ *             "security_message"="Vous n'avez pas les droits d'accès.",
+ *             "denormalization_context"={"groups"={"patch_role_admin"}}
  *         },
+ *         "delete"={
+ *             "method"="DELETE",
+ *             "path"="/prets/{id}",
+ *             "security"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_PRET') and object == user)",
+ *             "security_message"="Vous n'avez pas les droits d'accès.",
+ *              "normalization_context"={"groups"={"delete_role_admin"}}
+ *         }
  *     }
  * )
+ * @HasLifecycleCallbacks()
  */
 class Pret
 {
