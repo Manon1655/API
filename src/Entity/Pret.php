@@ -14,13 +14,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=PretRepository::class)
  * @ApiResource(
- *     itemOperations={
+ *     collectionOperations={
  *         "get_simple"={
  *             "method"="GET",
  *             "path"="/prets/{id}/simple",
  *             "normalization_context"={"groups"={"listPretSimple"}}
  *         },
- *          "get_full"={
+ *         "get_full"={
  *             "method"="GET",
  *             "path"="/prets/{id}/full",
  *             "normalization_context"={"groups"={"listPretFull"}}
