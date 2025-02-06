@@ -14,16 +14,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=PretRepository::class)
  * @ApiResource(
- *      collectionOperations={
- *          "get"={
- *              "method"="GET",
- *              "path"="/prets/{id}",
- *              "security"="(is_granted('ROLE_PRET') and object.getPret() == user) or is_granted('ROLE_MANAGER')",
- *              "security_message"="Vous ne pouvez avoir accès qu'à vos propres prêts."
- *           }
- *      }
- * )
- *  },
+ *     itemOperations={
+ *         "get_simple"={
+ *             "method"="GET",
+ *             "path"="/prets/{id}/simple",
+ *             "normalization_context"={"groups"={"listPretSimple"}}
+ *         },
  *          "get_full"={
  *             "method"="GET",
  *             "path"="/prets/{id}/full",
@@ -32,10 +28,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  *         "post"={
  *             "method"="POST",
  *             "path"="/prets/{id}",
- *             "security"="is_granted('ROLE_MANAGER')",
- *             "security_message"="Vous n'avez pas les droits d'accès.",
+ *             "access_control"="is_granted('ROLE_MANAGER')",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
  *             "denormalization_context"={"groups"={"post_role_manager"}}
- *         }
+ *         },
  *     },
  *     itemOperations={
  *         "get"={

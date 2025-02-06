@@ -17,24 +17,25 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=LivreRepository::class)
- * @ApiResource(
- *      attributes={
- *          "order"={"titre"="ASC"}  
- *      },
- *      collectionOperations={
- *          "get"={
- *              "method"="GET",
- *              "path"="/livres",
- *              "normalization_context"={
- *                  "groups"={"get_role_adherent"}
- *              }
- *          },
- *          "post"={
+ *  @ApiResource(
+ *     itemOperations={
+ *         "get_simple"={
+ *             "method"="GET",
+ *             "path"="/livres/{id}/simple",
+ *             "normalization_context"={"groups"={"listLivreSimple"}}
+ *         },
+ *          "get_full"={
+ *             "method"="GET",
+ *             "path"="/livres/{id}/full",
+ *             "normalization_context"={"groups"={"listLivreFull"}}
+ *         },
+ *         "post"={
  *             "method"="POST",
- *             "path"="/genres/{id}",
- *             "security"="is_granted('ROLE_MANAGER')",
- *             "security_message"="Vous n'avez pas les droits d'accéder à cette ressource"
- *      },
+ *             "path"="/livres/{id}",
+ *             "access_control"="is_granted('ROLE_MANAGER')",
+ *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "denormalization_context"={"groups"={"post_role_manager"}}
+ *         },
  *          "meilleurslivres"={
  *              "method"="GET",
  *              "route_name"="meilleurslivres",
@@ -45,25 +46,31 @@ use Symfony\Component\Validator\Constraints as Assert;
  *         "get"={
  *             "method"="GET",
  *             "path"="/livres/{id}",
- *             "normalization_context"={
- *                  "groups"={"get_role_adherent"}
- *             }
+ *             "security"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_LIVRE') and object == user)",
+ *             "security_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"get_role_livre"}}
  *         },
  *         "put"={
  *             "method"="PUT",
  *             "path"="/livres/{id}",
- *             "security"="is_granted('ROLE_MANAGER')",
- *             "security_message"="Vous n'avez pas les droits d'accéder à cette ressource",
- *             "denormalization_context"={
- *                  "groups"={"put_manager"}
- *             }
+ *             "security"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_LIVRE') and object == user)",
+ *             "security_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"put_role_admin"}}
  *         },
  *         "delete"={
  *             "method"="DELETE",
  *             "path"="/livres/{id}",
- *             "security"="is_granted('ROLE_ADMIN')",
- *             "security_message"="Vous n'avez pas les droits d'accéder à cette ressource"
- *         }
+ *             "security"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_LIVRE') and object == user)",
+ *             "security_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"delete_role_admin"}}
+ *         },
+ *         "patch"={
+ *             "method"="PATCH",
+ *             "path"="/livres/{id}",
+ *             "security"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_LIVRE') and object == user)",
+ *             "security_message"="Vous n'avez pas les droits d'accès.",
+ *             "normalization_context"={"groups"={"patch_role_admin"}}
+ *         },
  *     }
  * )
  */
