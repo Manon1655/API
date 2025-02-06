@@ -94,7 +94,7 @@ class Nationalite
 
     /**
      * @ORM\OneToMany(targetEntity=Auteur::class, mappedBy="nationalite")
-     * @Groups({"listNationaliteFull","listNationaliteFull"})
+     * @Groups({"listNationaliteFull"})
      * @Groups({"post_role_manager","put_role_admin"})
      */
     private $auteurs;
@@ -120,7 +120,7 @@ class Nationalite
 
         return $this;
     }
-
+     
     /**
      * @return array
      * @Groups({"listNationaliteFull"})

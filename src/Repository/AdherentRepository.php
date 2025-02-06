@@ -24,9 +24,6 @@ class AdherentRepository extends ServiceEntityRepository
     }
 
     /**
-     * 
-     * 
-     *
      * @param Adherent $entity
      * @param boolean $flush
      * @return void

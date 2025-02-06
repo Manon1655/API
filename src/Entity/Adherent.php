@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass=AdherentRepository::class)
  * @ApiResource(
- *     itemOperations={
+ *     collectionOperations={
  *         "get_simple"={
  *             "method"="GET",
  *             "path"="/adherents/{id}/simple",

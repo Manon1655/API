@@ -154,12 +154,15 @@ class Pret
         return $this->datePret;
     }
 
-    public function setDatePret(\DateTimeInterface $datePret): self
-    {
-        $this->datePret = $datePret;
-
-        return $this;
+    public function setDatePret($datePret): self
+{
+    $this->datePret = $datePret;
+    if ($this->dateRetourPrevue === null) {
+        $this->dateRetourPrevue = (clone $datePret)->modify('+15 days');
     }
+
+    return $this;
+}
 
     public function getDateRetourPrevue(): ?\DateTimeInterface
     {
@@ -178,8 +181,18 @@ class Pret
         return $this->dateRetourReelle;
     }
 
-    public function setDateRetourReelle(\DateTimeInterface $dateRetourReelle): self
+    /**
+     * Si la date de retour réelle est fournie, vérifie qu'elle est après la date de prêt.
+     * 
+     * @param \DateTime|null $dateRetourReelle
+     * @return self
+     */
+    public function setDateRetourReelle(?\DateTimeInterface $dateRetourReelle): self
     {
+        if ($dateRetourReelle !== null && $dateRetourReelle < $this->datePret) {
+            throw new \Exception("La date de retour réelle ne peut pas être antérieure à la date de prêt.");
+        }
+
         $this->dateRetourReelle = $dateRetourReelle;
 
         return $this;
@@ -191,11 +204,8 @@ class Pret
     public function getAdherent(): ?Adherent
     {
         return $this->adherent;
-    }
+    }  
 
-    /**
-     * @Groups({"listPretFull", "listPretSimple"})
-     */
     public function getAdherentPrenom(): ?string
     {
         return $this->adherent ? $this->adherent->getPrenom() : null;
