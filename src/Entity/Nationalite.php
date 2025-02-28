@@ -30,38 +30,38 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *         "post"={
  *             "method"="POST",
  *             "path"="/nationalites/{id}",
- *             "access_control"="is_granted('ROLE_MANAGER')",
- *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "security"="is_granted('ROLE_MANAGER')",
+ *             "security_message"="Vous n'avez pas les droits d'accès.",
  *             "denormalization_context"={"groups"={"post_role_manager"}}
- *         },
+ *         }
  *     },
  *     itemOperations={
  *         "get"={
  *             "method"="GET",
  *             "path"="/nationalites/{id}",
- *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_NATIONALITE') and object == user)",
- *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "security"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_NATIONALITE') and object == user)",
+ *             "security_message"="Vous n'avez pas les droits d'accès.",
  *             "normalization_context"={"groups"={"get_role_nationalite"}}
  *         },
  *         "put"={
  *             "method"="PUT",
  *             "path"="/nationalites/{id}",
- *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_NATIONALITE') and object == user)",
- *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "security"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_NATIONALITE') and object == user)",
+ *             "security_message"="Vous n'avez pas les droits d'accès.",
  *             "normalization_context"={"groups"={"put_role_admin"}}
  *         },
  *         "delete"={
  *             "method"="DELETE",
  *             "path"="/nationalites/{id}",
- *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_NATIONALITE') and object == user)",
- *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "security"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_NATIONALITE') and object == user)",
+ *             "security_message"="Vous n'avez pas les droits d'accès.",
  *             "normalization_context"={"groups"={"delete_role_admin"}}
  *         },
  *         "patch"={
  *             "method"="PATCH",
  *             "path"="/nationalites/{id}",
- *             "access_control"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_NATIONALITE') and object == user)",
- *             "access_control_message"="Vous n'avez pas les droits d'accès.",
+ *             "security"="(is_granted('ROLE_MANAGER') or is_granted('ROLE_NATIONALITE') and object == user)",
+ *             "security_message"="Vous n'avez pas les droits d'accès.", 
  *             "normalization_context"={"groups"={"patch_role_admin"}}
  *         },
  *     }
