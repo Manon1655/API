@@ -43,7 +43,7 @@ class ApiAdherentController extends AbstractController
      */
     public function listAdherents(AdherentRepository $adherentRepository, SerializerInterface $serializer): JsonResponse
     {
-        $adherents = $adherentRepository->findAll(); 
+        $adherents = $adherentRepository->findAll();
         $resultat = $serializer->serialize(
             $adherents,
             'json',
@@ -65,7 +65,7 @@ class ApiAdherentController extends AbstractController
         return count($adherent->getPrets());
     }
 
-       /**
+    /**
      * @Route("/api/adherents/{id}/nbpret", name="adherents_nbPrets", methods={"GET"})
      */
     public function pret_nb(Adherent $adherent): int
@@ -96,13 +96,13 @@ class ApiAdherentController extends AbstractController
         $data = $request->getContent();
         $dataTab = json_decode($data, true);
         $adherent = $serializer->deserialize($data, Adherent::class, 'json');
-        
+
         if (isset($dataTab['pret']['id'])) {
             $pret = $repopret->find($dataTab['pret']['id']);
             if (!$pret) {
                 return new JsonResponse("Prêt invalide ou introuvable", Response::HTTP_BAD_REQUEST);
             }
-            $adherent->addPret($pret); 
+            $adherent->addPret($pret);
         }
         $errors = $validator->validate($adherent);
         if (count($errors)) {
@@ -111,7 +111,7 @@ class ApiAdherentController extends AbstractController
         }
         $manager->persist($adherent);
         $manager->flush();
-        
+
         return new JsonResponse(
             "L'adhérent a bien été créé",
             Response::HTTP_CREATED,
@@ -133,7 +133,7 @@ class ApiAdherentController extends AbstractController
     {
         $data = $request->getContent();
         $serializer->deserialize($data, Adherent::class, 'json', ['object_to_populate' => $adherent]);
-        
+
         $errors = $validator->validate($adherent);
         if (count($errors)) {
             $errorsJson = $serializer->serialize($errors, 'json');
@@ -141,8 +141,8 @@ class ApiAdherentController extends AbstractController
         }
         $manager->persist($adherent);
         $manager->flush();
-    
-        return new JsonResponse("L'adhérent a bien été modifié", Response::HTTP_OK, [], true); 
+
+        return new JsonResponse("L'adhérent a bien été modifié", Response::HTTP_OK, [], true);
     }
 
     /**

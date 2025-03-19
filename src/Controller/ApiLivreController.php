@@ -30,7 +30,7 @@ class ApiLivreController extends AbstractController
                 'groups' => ['listLivreFull']
             ]
         );
-        return new JsonResponse($resultat,200,[],true);
+        return new JsonResponse($resultat, 200, [], true);
         // return $this->render('api_livre/livre.html.twig', [
         //     'controller_name' => 'ApiLivreController','livres' => json_decode($resultat, true)
         // ]);
@@ -57,16 +57,16 @@ class ApiLivreController extends AbstractController
      */
     public function create(Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
-        $data=$request->getContent();
+        $data = $request->getContent();
         // $livre=new Livre();
         // $serializer->deserialize($data, Livre::class,'json',['object_to_populate'=>$livre]);
-        $livre=$serializer->deserialize($data, Livre::class,'json');
+        $livre = $serializer->deserialize($data, Livre::class, 'json');
 
         // gestion des erreurs de validation 
-        $errors=$validator->validate($livre);
-        if(count($errors)){
-            $errorsJson=$serializer->serialize($errors,'json');
-            return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST,[],true);
+        $errors = $validator->validate($livre);
+        if (count($errors)) {
+            $errorsJson = $serializer->serialize($errors, 'json');
+            return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST, [], true);
         }
 
         $manager->persist($livre);
@@ -76,38 +76,40 @@ class ApiLivreController extends AbstractController
             "Le livre a bien été créé",
             Response::HTTP_CREATED,
             // ["location"=>"api/livres/".$livre->getId()],
-            ["location"=> $this->generateUrl(
-                    'api_livres_show',
-                ["id"=>$livre->getId()],
-                UrlGeneratorInterface::ABSOLUTE_URL)],
-            true);
+            ["location" => $this->generateUrl(
+                'api_livres_show',
+                ["id" => $livre->getId()],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            )],
+            true
+        );
     }
 
     /**
      * @Route("/api/livres/{id}", name="api_livres_update", methods={"PUT"})
      */
-    public function edit(Livre $livre,Request $request,EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
+    public function edit(Livre $livre, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
-        $data=$request->getContent();
-        $serializer->deserialize($data, Livre::class,'json',['object_to_populate'=>$livre]);
+        $data = $request->getContent();
+        $serializer->deserialize($data, Livre::class, 'json', ['object_to_populate' => $livre]);
 
         // gestion des erreurs de validation 
-        $errors=$validator->validate($livre);
-        if(count($errors)){
-            $errorsJson=$serializer->serialize($errors,'json');
-            return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST,[],true);
+        $errors = $validator->validate($livre);
+        if (count($errors)) {
+            $errorsJson = $serializer->serialize($errors, 'json');
+            return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST, [], true);
         }
 
         $manager->persist($livre);
         $manager->flush();
 
-        return new JsonResponse("le livre a bien été modifié",Response::HTTP_OK,[],true); 
+        return new JsonResponse("le livre a bien été modifié", Response::HTTP_OK, [], true);
     }
 
     /**
      * @Route("/api/livres/{id}", name="api_livres_delete", methods={"DELETE"})
      */
-    public function delete(Livre $livre,EntityManagerInterface $manager): JsonResponse
+    public function delete(Livre $livre, EntityManagerInterface $manager): JsonResponse
     {
         $manager->remove($livre);
         $manager->flush();

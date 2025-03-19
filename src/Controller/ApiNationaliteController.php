@@ -29,7 +29,7 @@ class ApiNationaliteController extends AbstractController
                 'groups' => ['listNationaliteFull']
             ]
         );
-        return new JsonResponse($resultat,200,[],true);
+        return new JsonResponse($resultat, 200, [], true);
         // return $this->render('api_nationalite/nationalite.html.twig', [
         //     'controller_name' => 'ApiNationaliteController','nationalites' => json_decode($resultat, true)
         // ]);
@@ -50,7 +50,8 @@ class ApiNationaliteController extends AbstractController
 
         // return new JsonResponse($resultat, Response::HTTP_OK, [], true);
         return $this->render('api_nationalite/nationalite.html.twig', [
-            'controller_name' => 'ApiNationaliteController','nationalites' => json_decode($resultat, true)
+            'controller_name' => 'ApiNationaliteController',
+            'nationalites' => json_decode($resultat, true)
         ]);
     }
 
@@ -59,16 +60,16 @@ class ApiNationaliteController extends AbstractController
      */
     public function create(Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
-        $data=$request->getContent();
+        $data = $request->getContent();
         // $nationalite=new Nationalite();
         // $serializer->deserialize($data, Nationalite::class,'json',['object_to_populate'=>$nationalite]);
-        $nationalite=$serializer->deserialize($data, Nationalite::class,'json');
+        $nationalite = $serializer->deserialize($data, Nationalite::class, 'json');
 
         // gestion des erreurs de validation 
-        $errors=$validator->validate($nationalite);
-        if(count($errors)){
-            $errorsJson=$serializer->serialize($errors,'json');
-            return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST,[],true);
+        $errors = $validator->validate($nationalite);
+        if (count($errors)) {
+            $errorsJson = $serializer->serialize($errors, 'json');
+            return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST, [], true);
         }
 
         $manager->persist($nationalite);
@@ -78,38 +79,40 @@ class ApiNationaliteController extends AbstractController
             "Le nationalite a bien été créé",
             Response::HTTP_CREATED,
             // ["location"=>"api/nationalites/".$nationalite->getId()],
-            ["location"=> $this->generateUrl(
-                    'api_nationalites_show',
-                ["id"=>$nationalite->getId()],
-                UrlGeneratorInterface::ABSOLUTE_URL)],
-            true);
+            ["location" => $this->generateUrl(
+                'api_nationalites_show',
+                ["id" => $nationalite->getId()],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            )],
+            true
+        );
     }
 
     /**
      * @Route("/api/nationalites/{id}", name="api_nationalites_update", methods={"PUT"})
      */
-    public function edit(Nationalite $nationalite,Request $request,EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
+    public function edit(Nationalite $nationalite, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse
     {
-        $data=$request->getContent();
-        $serializer->deserialize($data, Nationalite::class,'json',['object_to_populate'=>$nationalite]);
+        $data = $request->getContent();
+        $serializer->deserialize($data, Nationalite::class, 'json', ['object_to_populate' => $nationalite]);
 
         // gestion des erreurs de validation 
-        $errors=$validator->validate($nationalite);
-        if(count($errors)){
-            $errorsJson=$serializer->serialize($errors,'json');
-            return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST,[],true);
+        $errors = $validator->validate($nationalite);
+        if (count($errors)) {
+            $errorsJson = $serializer->serialize($errors, 'json');
+            return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST, [], true);
         }
 
         $manager->persist($nationalite);
         $manager->flush();
 
-        return new JsonResponse("la nationalite a bien été modifié",Response::HTTP_OK,[],true); 
+        return new JsonResponse("la nationalite a bien été modifié", Response::HTTP_OK, [], true);
     }
 
     /**
      * @Route("/api/nationalites/{id}", name="api_nationalites_delete", methods={"DELETE"})
      */
-    public function delete(Nationalite $nationalite,EntityManagerInterface $manager): JsonResponse
+    public function delete(Nationalite $nationalite, EntityManagerInterface $manager): JsonResponse
     {
         $manager->remove($nationalite);
         $manager->flush();
