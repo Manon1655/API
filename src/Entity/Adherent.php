@@ -88,7 +88,7 @@ class Adherent implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"listAdherentFull", "listAdherentSimple"})
+     * @Groups({"get_role_adherent","listAdherentFull", "listAdherentSimple"})
      */
     private $id;
 
@@ -97,7 +97,7 @@ class Adherent implements UserInterface
      * @Groups({"listPretFull", "listPretSimple"})
      * @Assert\NotBlank(message="Le nom est obligatoire.")
      * @Assert\Length(max=255, maxMessage="Le nom ne doit pas dépasser {{ limit }} caractères.")
-     * @Groups({"post_role_manager","put_role_admin"})
+     * @Groups({"get_role_adherent","post_role_manager","put_role_admin"})
      */
     private $nom;
 
@@ -106,7 +106,7 @@ class Adherent implements UserInterface
      * @Groups({"listPretFull", "listPretSimple"})
      * @Assert\NotBlank(message="Le prénom est obligatoire.")
      * @Assert\Length(max=255, maxMessage="Le prénom ne doit pas dépasser {{ limit }} caractères.")
-     * @Groups({"post_role_manager","put_role_admin"})
+     * @Groups({"get_role_adherent","post_role_manager","put_role_admin"})
      */
     private $prenom;
 
@@ -114,7 +114,7 @@ class Adherent implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"listAdherentFull", "listAdherentSimple"})
      * @Assert\Length(max=255, maxMessage="L'adresse ne doit pas dépasser {{ limit }} caractères.")
-     * @Groups({"post_role_manager","put_role_admin"})
+     * @Groups({"get_role_adherent","post_role_manager","put_role_admin"})
      */
     private $adresse;
 
@@ -124,7 +124,7 @@ class Adherent implements UserInterface
      * @Assert\NotBlank(message="Le code postal est obligatoire.")
      * @Assert\Length(min=5, max=5, exactMessage="Le code postal doit contenir {{ limit }} caractères.")
      * @Assert\Regex(pattern="/^\d{5}$/", message="Le code postal doit être composé de 5 chiffres.")
-     * @Groups({"post_role_manager","put_role_admin"})
+     * @Groups({"get_role_adherent","post_role_manager","put_role_admin"})
      */
     private $codePostal;
 
@@ -133,7 +133,7 @@ class Adherent implements UserInterface
      * @Groups({"listAdherentFull", "listAdherentSimple"})
      * @Assert\NotBlank(message="La ville est obligatoire.")
      * @Assert\Length(min=2, max=100, minMessage="La ville doit contenir au moins {{ limit }} caractères.", maxMessage="La ville ne doit pas dépasser {{ limit }} caractères.")
-     * @Groups({"post_role_manager","put_role_admin"})
+     * @Groups({"get_role_adherent","post_role_manager","put_role_admin"})
      */
     private $ville;
 
@@ -141,7 +141,7 @@ class Adherent implements UserInterface
      * @ORM\Column(type="string", length=255)
      * @Groups({"listAdherentFull", "listAdherentSimple"})
      * @Assert\Regex(pattern="/^\d{10}$/", message="Le téléphone doit comporter 10 chiffres.")
-     * @Groups({"post_role_manager","put_role_admin"})
+     * @Groups({"get_role_adherent","post_role_manager","put_role_admin"})
      */
     private $telephone;
 
@@ -151,7 +151,7 @@ class Adherent implements UserInterface
      * @Assert\NotBlank(message="L'email est obligatoire.")
      * @Assert\Email(message="L'email '{{ value }}' n'est pas valide.")
      * @Assert\Length(max=255, maxMessage="L'email ne doit pas dépasser {{ limit }} caractères.")
-     * @Groups({"post_role_manager","put_role_admin"})
+     * @Groups({"get_role_adherent","post_role_manager","put_role_admin"})
      */
     private $mail;
 
